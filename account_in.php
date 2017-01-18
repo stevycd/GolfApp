@@ -67,6 +67,7 @@
         };
         document.getElementById('conf_name_btn').onclick = function () {
             name_err_msg.style.display = "block";
+            pass_err_msg.style.display = "none";
             if($('#set_full_name').val() === ""){
                 name_err_msg.style.color = "#e60000";
                 name_err_msg.innerHTML = "New name must not be empty.";
@@ -77,7 +78,6 @@
                             name_err_msg.style.color = "white";
                             name_err_msg.innerHTML = "Name change sucessful.";
                             set_full_name.value = "";
-                            pass_err_msg.style.display = "none";
                         } else {
                             name_err_msg.style.color = "#e60000";
                             name_err_msg.innerHTML = "Name change failed.";
@@ -87,6 +87,7 @@
         };
         document.getElementById('conf_pass_btn').onclick = function () {
             pass_err_msg.style.display = "block";
+            name_err_msg.style.display = "none";
             if(old_pass.value === "" || new_pass.value === ""){
                 pass_err_msg.style.color = "#e60000";
                 pass_err_msg.innerHTML = "Password fields must not be empty.";
@@ -98,7 +99,6 @@
                             pass_err_msg.innerHTML = "Password change sucessful.";
                             old_pass.value = "";
                             new_pass.value = "";
-                            name_err_msg.style.display = "none";
                         } else {
                             pass_err_msg.style.color = "#e60000";
                             pass_err_msg.innerHTML = "Password change failed.";

@@ -24,6 +24,7 @@
             
             if(strcmp($Stored_Pass, $Entered_Pass) == 0) {                
                 $_SESSION['UserName'] = $Email;
+                $_SESSION['FullName'] = $row['FullName'];
                 echo 1; // Success
             } else {
                 echo 0; // Failure

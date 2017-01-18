@@ -110,3 +110,13 @@ h1 {
     box-shadow: 0 0 0 0.8em transparent;
     background: rgba(255, 255, 255, 0.1);
 }	
+
+.log_msg {
+    display: none;
+    color: rgba(249, 249, 249, 0.9);
+    text-decoration: none;
+    font-size: 1em;
+    margin-top: 0;
+    padding: 0.5em;
+    background: rgba(25, 230, 77, 0.85);
+}

@@ -12,11 +12,11 @@
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <link href='//fonts.googleapis.com/css?family=Coda' rel='stylesheet'>
         <link rel="stylesheet" href="css/index_style.css"/> 
-<!--
-        <link rel="icon" href="img/favicon.ico"/>
-        <link rel="shortcut icon" href="img/favicon.ico"/>
-        <link rel="apple-touch-icon" href="img/icon.fw.png"/>
--->
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
         <title>Golf Caddie</title>
     </head>
     <body background="img/background.jpg">
@@ -43,6 +43,7 @@
                         <span class="icon"><i aria-hidden="true" class="icon-wrench"></i></span><span>Account</span>
                     </a>
                 </li>
+                <p id="log_msg" class="log_msg"></p>
             </ul>
         </nav>
     </body>
@@ -51,6 +52,8 @@
         $(document).ready(function() {
             if(<?php echo isset($_SESSION['UserName'])?>) {
                 document.getElementById('account_btn').href = "account_in.php";
+                document.getElementById('log_msg').style.display = "block";
+                document.getElementById('log_msg').innerHTML = "Logged in as: "+"<?php echo $_SESSION['FullName']?>";
             } 
         });
     </script>
