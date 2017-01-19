@@ -24,7 +24,7 @@
         <nav class="nav">
             <ul>
                 <li class="play_golf">
-                    <a href="#">
+                    <a href="map.html">
                         <span class="icon"><i aria-hidden="true" class="icon-golf"></i></span><span>Play Golf</span>
                     </a>
                 </li>
