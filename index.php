@@ -29,12 +29,12 @@
                     </a>
                 </li>
                 <li class="prev_rounds">
-                    <a href="#">
+                    <a id="prev_rounds_btn" href="account_out.php">
                         <span class="icon"><i aria-hidden="true" class="icon-folder-open"></i></span><span>Previous Rounds</span>
                     </a>
                 </li>
                 <li class="statistics">
-                    <a href="#">
+                    <a id="statistics_btn" href="account_out.php">
                         <span class="icon"><i aria-hidden="true" class="icon-stats-dots"></i></span><span>Statistics</span>
                     </a>
                 </li>
@@ -43,7 +43,7 @@
                         <span class="icon"><i aria-hidden="true" class="icon-wrench"></i></span><span>Account</span>
                     </a>
                 </li>
-                <p id="log_msg" class="log_msg"></p>
+                <p id="log_msg" class="log_msg" style="border-top: 1px solid white;"></p>
             </ul>
         </nav>
     </body>
@@ -51,7 +51,10 @@
     <script type="text/javascript">
         $(document).ready(function() {
             if(<?php echo isset($_SESSION['UserName'])?>) {
+                document.getElementById('prev_rounds_btn').href = "#";
+                document.getElementById('statistics_btn').href = "#";
                 document.getElementById('account_btn').href = "account_in.php";
+                
                 document.getElementById('log_msg').style.display = "block";
                 document.getElementById('log_msg').innerHTML = "Logged in as: "+"<?php echo $_SESSION['FullName']?>";
             } 
