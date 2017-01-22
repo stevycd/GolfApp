@@ -1,4 +1,4 @@
-CREATE TABLE userAccounts
+CREATE TABLE userAccounts 
 (
 UserID int NOT NULL auto_increment,
 FullName VARCHAR(40) NOT NULL,

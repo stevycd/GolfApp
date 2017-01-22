@@ -10,13 +10,13 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
         <link href='//fonts.googleapis.com/css?family=Coda' rel='stylesheet'>
         <link rel="stylesheet" href="css/account_in_style.css"/> 
-<!--
-        <link rel="icon" href="img/favicon.ico"/>
-        <link rel="shortcut icon" href="img/favicon.ico"/>
-        <link rel="apple-touch-icon" href="img/icon.fw.png"/>
--->
         <title>Golf Caddie</title>
     </head>
     <body background="img/background.jpg">
@@ -76,7 +76,7 @@
                     function(result) {  
                         if(result == 1) {
                             name_err_msg.style.color = "white";
-                            name_err_msg.innerHTML = "Name change sucessful.";
+                            name_err_msg.innerHTML = "Name change successful.";
                             set_full_name.value = "";
                         } else {
                             name_err_msg.style.color = "#e60000";

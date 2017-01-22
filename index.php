@@ -10,13 +10,13 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <link href='//fonts.googleapis.com/css?family=Coda' rel='stylesheet'>
-        <link rel="stylesheet" href="css/index_style.css"/> 
         <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
         <link rel="shortcut icon" href="img/favicon-16x16.png"/>
         <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link href='//fonts.googleapis.com/css?family=Coda' rel='stylesheet'>
+        <link rel="stylesheet" href="css/index_style.css"/> 
         <title>Golf Caddie</title>
     </head>
     <body background="img/background.jpg">
@@ -24,7 +24,7 @@
         <nav class="nav">
             <ul>
                 <li class="play_golf">
-                    <a href="map.html">
+                    <a id="play_golf_btn" href="account_out.php">
                         <span class="icon"><i aria-hidden="true" class="icon-golf"></i></span><span>Play Golf</span>
                     </a>
                 </li>
@@ -51,6 +51,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             if(<?php echo isset($_SESSION['UserName'])?>) {
+                document.getElementById('play_golf_btn').href = "map.php?id=1";
                 document.getElementById('prev_rounds_btn').href = "#";
                 document.getElementById('statistics_btn').href = "#";
                 document.getElementById('account_btn').href = "account_in.php";
