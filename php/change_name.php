@@ -17,7 +17,10 @@
     function change_name($Fullname, $Email) {
         $Query = "UPDATE userAccounts SET FullName = '$Fullname' WHERE Email = '$Email'";
         $Data = mysql_query($Query);
-        if($Data) { echo 1; } // Success
+        if($Data) { 
+            $_SESSION['FullName'] = $Fullname;
+            echo 1; 
+        } // Success
         else { echo $Data; } // Failure
     }
 ?>

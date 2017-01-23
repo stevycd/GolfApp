@@ -32,26 +32,21 @@
         <title><?php echo $row['Hole_Name'] ?></title>
   	<script src="js/leaflet.js"></script>
   	<style>
+            /* Global Styles */
+            html * {
+                font-family:  Tahoma, Geneva, sans-serif;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
             #map {
-                z-index: 1;
-                height: 100vh; 
-            }
-            #next_hole_btn {
-                margin-top: 2vh;
-                margin-left: 6vw;
-            }
-            #gps_btn {
-                margin-top: 9vh;
-                margin-left: 6vw;
+                font-size: 2.5em;
+                height: 94vh; 
             }
             input[type=button] {
+                margin-bottom: 0.1em;
+                margin-right: 0;
                 height: 5vh;
-                width: 30vw;
-                
-                position: absolute;
-                z-index: 2;
-                margin-top: 0.4em;
-                padding: 0.375em;
+                width: 24.2vw;
                 background: rgba(23, 207, 69, 0.85);
                 color: rgba(249, 249, 249, 0.9);
                 font-size: 2.5em;
@@ -63,18 +58,30 @@
             }
   	</style>
     </head>
-    <body>
+    <body background="img/background.jpg">
+        <input type="button" name="prev_hole" id="prev_hole_btn" value="Prev Hole">
+        <input type="button" name="home" id="home_btn" value="Home">
+        <input type="button" name="gps" id="gps_btn" value="Mark">
+        <input type="button" name="next_hole" id="next_hole_btn" value="Next Hole">
         <div id="container" style="position:relative;">
-            <input type="button" name="next_hole" id="next_hole_btn" value="Next Hole">
-            <input type="button" name="gps" id="gps_btn" value="Mark Location">
             <div id="map"></div>
         </div>
     </body>
     <script>
+        var flagIcon = L.icon({
+           iconUrl: 'img/flag.png',
+           iconSize:     [38,106],
+           iconAnchor:   [6,103],
+           popupAnchor:  [6,-100]
+        });
+        
         var map = L.map('map'), 
             markers = Array(),
+            lines = Array(),
+            linesLayer = L.layerGroup(lines),
+            holeLat = <?php echo $row['Hole_lat'] ?>, holeLng = <?php echo $row['Hole_lng'] ?>,
             cenLat = <?php echo $row['Cen_lat'] ?>, cenLng = <?php echo $row['Cen_lng'] ?>,
-            teeLat = <?php echo $row['Tee_lat'] ?>, teeLng = <?php echo $row['Tee_lng'] ?>,
+            teeLat = <?php echo $row['Tee_lat'] ?>, teeLng = <?php echo $row['Tee_lng'] ?>,  
             zoom = <?php echo $row['Zoom'] ?>;
         
         var init_map = function () {
@@ -83,33 +90,73 @@
             map.touchZoom.disable();
 
             // load a tile layer
-            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-                maxZoom: 20,
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3RlcGhlbmR1bmRhcyIsImEiOiJjaXlhNzd1eTcwMDJmMndsdzNrNDc3a282In0.FI15WibAWtIOonIDt7J-FQ', {
+                maxZoom: 19,
                 minZoom: 17,
-                id: 'mapbox.streets'
+                id: 'mapbox.outdoors'
             }).addTo(map);
             
             add_tee(teeLat, teeLng);
+            add_hole(holeLat, holeLng);
         };
         
-        var add_tee = function (teeLat, teeLng) {
+        var add_tee = function (teeLat, teeLng) { // 55.74371, -4.14736
             teeMarker = L.marker(new L.LatLng(teeLat, teeLng), {clickable: true, draggable: true}).addTo(map);
             markers.push(teeMarker.getLatLng());
-        };    
+            
+//            if(map.getBounds().contains(new L.LatLng(55.74371, -4.14736))) {
+//                testMarker = L.marker(new L.LatLng(55.74371, -4.14736)).addTo(map);
+//                testMarker.bindPopup("" + get_dist(teeMarker, testMarker)).openPopup();
+//                markers.push(testMarker.getLatLng());
+//            }
+//            L.polyline(markers, {color: 'white'}).addTo(map);  
+        };  
+        
+        var add_hole = function (holeLat, holeLng) {
+            holeMarker = L.marker(new L.LatLng(holeLat, holeLng), {icon: flagIcon, clickable: true}).addTo(map);
+            holeMarker.bindPopup("" + get_dist(markers[markers.length-1], holeMarker.getLatLng())).openPopup();
+            
+            markers.push(holeMarker.getLatLng());
+            lines = L.polyline(markers, {color: 'white'}).addTo(map);
+        };
         
         document.getElementById('gps_btn').onclick = function() {
             if(navigator.geolocation){
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    newMarker = L.marker(new L.LatLng(position.coords.latitude,position.coords.longitude), {draggable: true}).addTo(map);
-                    markers.push(newMarker.getLatLng());
-                    L.polyline(markers, {color: 'white'}).addTo(map);
+                    var LatLng = new L.LatLng(position.coords.latitude,position.coords.longitude);
+                    if(map.getBounds().contains(LatLng)) {
+                        newMarker = L.marker(LatLng, {draggable: true}).addTo(map);
+                        newMarker.bindPopup("" + get_dist(markers[markers.length-2], newMarker.getLatLng())).openPopup();
+                        // Re-draw Polylines
+                        map.removeLayer(lines);
+                        markers.splice(markers.length-1,0,newMarker.getLatLng());
+                        lines = L.polyline(markers, {color: 'white'});
+                        lines.addTo(map);
+                        // Update Hole Yardage
+                        holeMarker._popup.setContent("" + get_dist(markers[markers.length-2], holeMarker.getLatLng()));
+                    } else {
+                        alert("Not in Bounds");
+                    }
                 });
             }
+        };
+        
+        var get_dist = function (from, to) {
+            return Math.round((from.distanceTo(to)) * 1.09361);
         };
         
         document.getElementById('next_hole_btn').onclick = function() {
             var HID = <?php echo $HID ?>;
             if(HID < 18) window.location =  "map.php?id=" + (HID+1); 
+        };
+        
+        document.getElementById('prev_hole_btn').onclick = function() {
+            var HID = <?php echo $HID ?>;
+            if(HID > 1) window.location =  "map.php?id=" + (HID-1); 
+        };
+        
+        document.getElementById('home_btn').onclick = function() {
+            window.location = "index.php"; 
         };
         
         window.onload = init_map;
