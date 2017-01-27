@@ -2,6 +2,7 @@ CREATE TABLE torranceInfo
 (
 HID int NOT NULL auto_increment,
 Hole_Name VARCHAR(40) NOT NULL,
+Par int NOT NULL,
 Hole_lat REAL NOT NULL,
 Hole_lng REAL NOT NULL,
 Cen_lat REAL NOT NULL,
