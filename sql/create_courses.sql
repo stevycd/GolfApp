@@ -1,6 +1,8 @@
-CREATE TABLE torranceInfo
+CREATE TABLE courses
 (
-HID int NOT NULL auto_increment,
+CID int NOT NULL,
+Course_Name VARCHAR(40) NOT NULL,
+HID int NOT NULL,
 Hole_Name VARCHAR(40) NOT NULL,
 Par int NOT NULL,
 Hole_lat REAL NOT NULL,
@@ -9,7 +11,6 @@ Cen_lat REAL NOT NULL,
 Cen_lng REAL NOT NULL,
 Tee_lat REAL NOT NULL,
 Tee_lng REAL NOT NULL,
-Zoom int NOT NULL,
-PRIMARY KEY(HID)
+Zoom int NOT NULL
 );
 

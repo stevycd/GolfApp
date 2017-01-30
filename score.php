@@ -1,8 +1,9 @@
 <?php
     //Start the session
     session_start();
-    //Get Hole ID
-    $HID = $_GET['id'];    
+    //Get IDs
+    $CID = $_GET['cid'];
+    $HID = $_GET['hid'];    
     //Connect to the database
     define('DB_HOST', 'devweb2015.cis.strath.ac.uk');
     define('DB_NAME', 'xqb13173');
@@ -12,7 +13,7 @@
     $con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD) or die("Failed to connect to MySQL: " . mysql_error());
     $db=mysql_select_db(DB_NAME,$con) or die("Failed to connect to MySQL: " . mysql_error());
 				
-    $result = mysql_query("SELECT * FROM torranceInfo WHERE HID = '$HID'");
+    $result = mysql_query("SELECT * FROM courses WHERE CID='$CID' AND HID='$HID'");
     $row = mysql_fetch_array($result);
 ?> 
 
@@ -31,11 +32,11 @@
         <style>
             @font-face {
                 font-family: 'icomoon';
-                src:  url('css/fonts/map_fonts/icomoon.eot?gfrc43');
-                src:  url('css/fonts/map_fonts/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
-                      url('css/fonts/map_fonts/icomoon.ttf?gfrc43') format('truetype'),
-                      url('css/fonts/map_fonts/icomoon.woff?gfrc43') format('woff'),
-                      url('css/fonts/map_fonts/icomoon.svg?gfrc43#icomoon') format('svg');
+                src:  url('css/fonts/map/icomoon.eot?gfrc43');
+                src:  url('css/fonts/map/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
+                      url('css/fonts/map/icomoon.ttf?gfrc43') format('truetype'),
+                      url('css/fonts/map/icomoon.woff?gfrc43') format('woff'),
+                      url('css/fonts/map/icomoon.svg?gfrc43#icomoon') format('svg');
                 font-weight: normal;
                 font-style: normal;
             }
@@ -65,59 +66,62 @@
             
             /* Global Styles */
             html * {
+                font-family:  Tahoma, Geneva, sans-serif;
                 background-repeat: no-repeat;
                 background-size: cover;
-            }
+            }            
             
             .nav {
-                width: 100%;
-                margin-top: 2em;
-                margin-bottom: 2em;
+                margin-bottom: 5em;
             }
             
-            .nav a {
-                display: inline;
+            ul {
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+                overflow: hidden;
+                background-color: rgba(23, 207, 69, 0.85);
+            }
+
+            li {
+                width: 20%;
+                float: left;
+            }
+
+            li a {
+                display: block;
+                color: white;
+                padding: 0;
+                padding-top: .5em;
+                padding-bottom: .5em;
+                font-size: 3.5em;
+                text-align: center;
+                text-decoration: none;
+            }
+            
+            .title {
+                width: 59%;
+                border-left: 1px solid white;
+                border-right: 1px solid white;
+            }
+            
+            #hole_num {
+                float: left;
+                padding-left: 1em;
+            }
+            
+            .heading {
                 background: rgba(23, 207, 69, 0.85);
                 color: rgba(249, 249, 249, 0.9);
-                font-size: 2.5em;
                 border: 1px solid white;
-                box-sizing: border-box;
-            }   
-
-            .nav li {
-                display: inline;
-                color: rgba(249, 249, 249, 0.9);
-                text-decoration: none;
-            }  
-
-            .nav ul {
-                list-style-type: none;
-                list-style: none;
-                font-size: 1.5em;
-                font-weight: 300;
-            }
-
-            .nav li span {
-                display: inline;
-                padding: 1em;
-                margin: 0 auto;
-            }
-
-            .nav i {
-                position: relative;
-                padding: 0.5em;
-                display: inline;
-                font-size: 1em;
-            }
-            
-            #headings {
                 font-size: 4em;
+                font-weight:normal;
+                text-align: left;
             }
             
             select {
-                -webkit-appearance: none;
                 width: 100%;
-                font-size: 6em;
+                font-size: 5em;
             }
             
             option {
@@ -134,9 +138,9 @@
                         <span class="icon"><i aria-hidden="true" class="icon-arrow-left"></i></span>
                     </a>
                 </li>
-                <li class="button">
-                    <a id="account_btn" href="account_out.php">
-                        <span>Account</span>
+                <li class="title">
+                    <a>
+                        <span id="hole_num"></span><span id="hole_name"></span>
                     </a>
                 </li>
                 <li class="button">
@@ -147,25 +151,25 @@
             </ul>
         </nav>
         <table style="width:100%">
-            <tr id="headings">
-                <th>Score</th>
-                <th>Putts</th> 
-                <th>Club</th>
+            <tr class="heading">
+                <td>Score</td>
+                <td>Putts</td> 
+                <td>Tee</td>
             </tr>
             <tr>
-                <th>
+                <td>
                     <select id="score" size="5"></select>
-                </th>
-                <th>
+                </td>
+                <td>
                     <select id="putts" size="5"></select>
-                </th>
-                <th>
-                    <select id="club" size="5">
-                        <option value="1">1W</option>
-                        <option value="2">3W</option>
-                        <option value="3">5W</option>
-                        <option value="4">1Hy</option>
-                        <option value="5">2Hy</option>
+                </td>
+                <td>
+                    <select id="tee" size="5">
+                        <option value="1W">1W</option>
+                        <option value="3W">3W</option>
+                        <option value="5W">5W</option>
+                        <option value="1Hy">1Hy</option>
+                        <option value="2Hy">2Hy</option>
                         <option value="3i">3i</option>
                         <option value="4i">4i</option>
                         <option value="5i">5i</option>
@@ -173,19 +177,18 @@
                         <option value="7i">7i</option>
                         <option value="8i">8i</option>
                         <option value="9i">9i</option>
-                        <option value="3i">Pw</option>
-                        <option value="3i">Gw</option>
-                        <option value="3i">Sw</option>
-                        <option value="3i">Lw</option>
+                        <option value="Pw">Pw</option>
+                        <option value="Gw">Gw</option>
+                        <option value="Sw">Sw</option>
+                        <option value="Lw">Lw</option>
                     </select>
-                </th>
+                </td>
             </tr>           
         </table>
     </body>
     <script type="text/javascript">
-        var par = <?php echo $row['Par'] ?>;
-        
         var create_score_slt = function () {
+            var par = <?php echo $row['Par'] ?>;
             var score_slt = document.getElementById('score');
             for(i = 0; i < 11; i++) {
                 o = document.createElement('option');
@@ -239,7 +242,37 @@
             create_putts_slt();
         };
         
+        document.getElementById('next_hole_btn').onclick = function() {
+            var CID = <?php echo $CID ?>;
+            var HID = <?php echo $HID ?>;
+            var score = {
+                Score: document.getElementById('score').value,
+                Putts: document.getElementById('putts').value,
+                Tee: document.getElementById('tee').value
+            };
+            if (typeof(Storage) !== "undefined") {
+                console.log(score.Score + " " + score.Putts + " " + score.Tee);
+                localStorage.setItem("Scr"+HID, score);
+            } else {
+                console.log("No Support for Local Storage");
+            }
+            if(HID < 18) {
+                window.location =  "map.php?cid="+CID+"&hid="+(HID+1);
+            }
+            else window.location = "index.php"; 
+        };
+        
+        document.getElementById('prev_hole_btn').onclick = function() {
+            var CID = <?php echo $CID ?>;
+            var HID = <?php echo $HID ?>;
+            if(HID >= 1) window.location =  "map.php?cid="+CID+"&hid="+HID; 
+            else window.location = "index.php"; 
+        };
+        
         window.onload = function () {
+            document.getElementById('hole_num').innerHTML = "<?php echo $HID ?>"; 
+            document.getElementById('hole_name').innerHTML = "<?php echo $row['Hole_Name'] ?>"; 
+            
             create_score_slt();
             create_putts_slt();
         };

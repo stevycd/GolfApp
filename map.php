@@ -1,8 +1,9 @@
 <?php
     //Start the session
     session_start();
-    //Get Hole ID
-    $HID = $_GET['id'];    
+    //Get IDs
+    $CID = $_GET['cid'];
+    $HID = $_GET['hid'];    
     //Connect to the database
     define('DB_HOST', 'devweb2015.cis.strath.ac.uk');
     define('DB_NAME', 'xqb13173');
@@ -12,7 +13,7 @@
     $con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD) or die("Failed to connect to MySQL: " . mysql_error());
     $db=mysql_select_db(DB_NAME,$con) or die("Failed to connect to MySQL: " . mysql_error());
 				
-    $result = mysql_query("SELECT * FROM torranceInfo WHERE HID = '$HID'");
+    $result = mysql_query("SELECT * FROM courses WHERE CID='$CID' AND HID='$HID'");
     $row = mysql_fetch_array($result);
 ?> 
 
@@ -28,119 +29,9 @@
         <link rel="shortcut icon" href="img/favicon-16x16.png"/>
         <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
 	<link rel="stylesheet" href="css/leaflet.css"/>
-        <!--<link rel="stylesheet" href="css/map.css"/>--> 
+        <link rel="stylesheet" href="css/map.css"/> 
         <script src="js/leaflet.js"></script>
         <title><?php echo $row['Hole_Name'] ?></title>
-        <style>
-            @font-face {
-                font-family: 'icomoon';
-                src:  url('css/fonts/map_fonts/icomoon.eot?gfrc43');
-                src:  url('css/fonts/map_fonts/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
-                      url('css/fonts/map_fonts/icomoon.ttf?gfrc43') format('truetype'),
-                      url('css/fonts/map_fonts/icomoon.woff?gfrc43') format('woff'),
-                      url('css/fonts/map_fonts/icomoon.svg?gfrc43#icomoon') format('svg');
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            [class^="icon-"], [class*=" icon-"] {
-                font-family: 'icomoon' !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
-            }
-
-            .icon-compass:before {
-                content: "\e949";
-            }
-            .icon-menu:before {
-                content: "\e9bd";
-            }
-            .icon-arrow-right:before {
-                content: "\ea34";
-            }
-            .icon-arrow-left:before {
-                content: "\ea38";
-            }
-
-            /* Global Styles */
-            html * {
-                font-family:  Tahoma, Geneva, sans-serif;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-
-            #map {
-                z-index: 1;
-                font-size: 2.5em;
-                height: 91vh; 
-            }
-
-            .nav a {
-                display: inline;
-                margin: 0 auto;
-                padding: 0.5em;
-                background: rgba(23, 207, 69, 0.85);
-                color: rgba(249, 249, 249, 0.9);
-                font-size: 2.5em;
-                border: 1px solid white;
-                box-sizing: border-box;
-            }   
-
-            .nav li {
-                display: inline;
-                color: rgba(249, 249, 249, 0.9);
-                text-decoration: none;
-            }  
-
-            .nav ul {
-                max-width: 1240px;
-                padding: 0;
-                margin: 0 auto;
-                list-style-type: none;
-                list-style: none;
-                font-size: 1.5em;
-                font-weight: 300;
-            }
-
-            .nav li span {
-                display: inline;
-            }
-
-            .nav i {
-                position: relative;
-                display: inline;
-                margin: 0 auto;
-                padding: 0.4em;
-                font-size: 1em;
-            }
-            
-            .club_select {
-                font-size: 2.5em;
-                width: 60%;
-                margin: 0 auto;
-                margin-right: -0.15em;
-                padding: 0.5em;
-                padding-left: 0.6em;
-                background: rgba(23, 207, 69, 0.85);
-                color: rgba(249, 249, 249, 0.9);
-                border: 1px solid white;
-                box-sizing: border-box;
-            }
-
-            .hole_num {
-                z-index: 2;
-                position: absolute;
-                margin-left: 5vw;
-                margin-top: 1vh;
-                color: rgb(249, 249, 249);
-                font-size: 10em;
-                text-shadow: 2px 2px black;
-            }
-        </style>
     </head>
     <body background="img/background.jpg">       
         <nav class="nav">
@@ -150,26 +41,29 @@
                         <span class="icon"><i aria-hidden="true" class="icon-arrow-left"></i></span>
                     </a>
                 </li>
-                <li class="button">
-                    <select id="club_select" class="club_select">
-                        <option value="" disabled selected>Mark your Shot</option>
-                        <option value="1W">1W</option>
-                        <option value="3W">3W</option>
-                        <option value="5W">5W</option>
-                        <option value="1Hy">1Hy</option>
-                        <option value="2Hy">2Hy</option>
-                        <option value="3i">3i</option>
-                        <option value="4i">4i</option>
-                        <option value="5i">5i</option>
-                        <option value="6i">6i</option>
-                        <option value="7i">7i</option>
-                        <option value="8i">8i</option>
-                        <option value="9i">9i</option>
-                        <option value="Pw">Pw</option>
-                        <option value="Gw">Gw</option>
-                        <option value="Sw">Sw</option>
-                        <option value="Lw">Lw</option>
-                    </select>
+                <li class="title">
+                    <a id="club">
+<!--                        <span>Name of Hole</span>-->
+                        <select id="club_select" class="club_select">
+                            <option value="" disabled selected>Mark your Shot</option>
+                            <option value="1W">1W</option>
+                            <option value="3W">3W</option>
+                            <option value="5W">5W</option>
+                            <option value="1Hy">1Hy</option>
+                            <option value="2Hy">2Hy</option>
+                            <option value="3i">3i</option>
+                            <option value="4i">4i</option>
+                            <option value="5i">5i</option>
+                            <option value="6i">6i</option>
+                            <option value="7i">7i</option>
+                            <option value="8i">8i</option>
+                            <option value="9i">9i</option>
+                            <option value="Pw">Pw</option>
+                            <option value="Gw">Gw</option>
+                            <option value="Sw">Sw</option>
+                            <option value="Lw">Lw</option>
+                        </select>
+                    </a>
                 </li>
                 <li class="button">
                     <a id="next_hole_btn">
@@ -178,12 +72,28 @@
                 </li>
             </ul>
         </nav>
+        <p id="err_msg" class="err_msg"></p>
         <div id="container" style="position:relative;">
-            <p id="hole_num" class="hole_num"></p>
+            <table class="hole_info">
+                <tr class="heading"><td>Hole</td></tr>
+                <tr>
+                    <td id="hole_num" class="info"></td>
+                </tr>
+                <tr class="heading"><td>Total Yards</td></tr>
+                <tr>
+                    <td id="total_yrds" class="info">468</td>
+                </tr>
+                <tr class="heading"><td>Par</td></tr>
+                <tr>
+                    <td id="par" class="info">5</td>
+                </tr>
+            </table>
             <div id="map"></div>
         </div>
     </body>
-    <script>        
+    <script>    
+        var shots = Array();
+    
         var flagIcon = L.icon({
            iconUrl: 'img/flag.png',
            iconSize:     [38,106],
@@ -202,6 +112,8 @@
         
         var init_map = function () {
             document.getElementById('hole_num').innerHTML = "<?php echo $HID ?>";
+            document.getElementById('total_yrds').innerHTML = get_dist(new L.LatLng(teeLat, teeLng), new L.LatLng(holeLat, holeLng));
+            document.getElementById('par').innerHTML = "<?php echo $row['Par'] ?>";
             
             map.setView(new L.LatLng(cenLat, cenLng), zoom);
             map.dragging.disable();
@@ -221,7 +133,9 @@
             
             map.on('click', function(e) {
                 console.log("LAT: " + e.latlng.lat + " || LNG: " + e.latlng.lng);
-                add_marker(e.latlng.lat, e.latlng.lng);
+                var select = document.getElementById('club_select'),
+                    club = select.options[select.selectedIndex].value;
+                add_marker(e.latlng.lat, e.latlng.lng, club);
             });
             
             add_tee(teeLat, teeLng);
@@ -246,7 +160,11 @@
             var LatLng = new L.LatLng(lat, lng);
             if(map.getBounds().contains(LatLng)) {
                 newMarker = L.marker(LatLng, {draggable: true}).addTo(map);
-                newMarker.bindPopup(get_dist(markers[markers.length-2], newMarker.getLatLng()) + " ("+club+")").openPopup();
+                var dist = get_dist(markers[markers.length-2], newMarker.getLatLng());
+                newMarker.bindPopup(dist + " ("+club+")").openPopup();
+                
+                shots.push({Lat: lat, Lng: lng, Club: club, Dist: dist});
+                
                 // Re-draw Polylines
                 map.removeLayer(lines);
                 markers.splice(markers.length-1,0,newMarker.getLatLng());
@@ -255,21 +173,15 @@
                 // Update Hole Yardage
                 holeMarker._popup.setContent("" + get_dist(markers[markers.length-2], holeMarker.getLatLng()));
             } else {
-                alert("Not in Bounds ("+lat+", "+lng+")");
+                document.getElementById('err_msg').style.display = "block";
+                document.getElementById('err_msg').innerHTML = "Not in Bounds ("+(Math.round(lat * 100) / 100)+", "+(Math.round(lng * 100) / 100)+")";
             }
         };
         
         var get_dist = function (from, to) {
             return Math.round((from.distanceTo(to)) * 1.09361);
         };
-        
-//        document.getElementById('gps_btn').onclick = function() {
-//            if(navigator.geolocation){
-//                navigator.geolocation.getCurrentPosition(function(position) {
-//                    add_marker(position.coords.latitude, position.coords.longitude);
-//                });
-//            }
-//        };
+       
         document.getElementById('club_select').onchange = function() {
             if(navigator.geolocation){
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -282,20 +194,22 @@
         };   
            
         document.getElementById('next_hole_btn').onclick = function() {
+            var CID = <?php echo $CID ?>;
             var HID = <?php echo $HID ?>;
-            if(HID < 18) window.location =  "score.php?id=" + (HID);
-            else window.location = "index.php"; 
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem("Map"+HID, shots);
+            } else {
+                console.log("No Support for Local Storage");
+            }
+            window.location = "score.php?cid="+CID+"&hid="+HID;
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
+            var CID = <?php echo $CID ?>;
             var HID = <?php echo $HID ?>;
-            if(HID > 1) window.location =  "map.php?id=" + (HID-1); 
+            if(HID > 1) window.location =  "score.php?cid="+CID+"&hid="+(HID-1); 
             else window.location = "index.php"; 
         };
-        
-//        document.getElementById('home_btn').onclick = function() {
-//            window.location = "index.php"; 
-//        };
         
         window.onload = init_map;
     </script>

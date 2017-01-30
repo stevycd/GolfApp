@@ -16,7 +16,7 @@
         <link rel="shortcut icon" href="img/favicon-16x16.png"/>
         <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
         <link href='//fonts.googleapis.com/css?family=Coda' rel='stylesheet'>
-        <link rel="stylesheet" href="css/account_in_style.css"/> 
+        <link rel="stylesheet" href="css/account_in.css"/> 
         <title>Golf Caddie</title>
     </head>
     <body background="img/background.jpg">

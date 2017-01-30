@@ -1,16 +1,16 @@
 @font-face {
     font-family: 'icomoon';
-    src:  url('fonts/map_fonts/icomoon.eot?gfrc43');
-    src:  url('fonts/map_fonts/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
-          url('fonts/map_fonts/icomoon.ttf?gfrc43') format('truetype'),
-          url('fonts/map_fonts/icomoon.woff?gfrc43') format('woff'),
-          url('fonts/map_fonts/icomoon.svg?gfrc43#icomoon') format('svg');
+    src:  url('fonts/map/icomoon.eot?gfrc43');
+    src:  url('fonts/map/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
+          url('fonts/map/icomoon.ttf?gfrc43') format('truetype'),
+          url('fonts/map/icomoon.woff?gfrc43') format('woff'),
+          url('fonts/map/icomoon.svg?gfrc43#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-    ont-family: 'icomoon' !important;
+    font-family: 'icomoon' !important;
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -31,7 +31,7 @@
 .icon-arrow-left:before {
     content: "\ea38";
 }
-          
+
 /* Global Styles */
 html * {
     font-family:  Tahoma, Geneva, sans-serif;
@@ -44,83 +44,93 @@ html * {
     font-size: 2.5em;
     height: 91vh; 
 }
-
-.nav a {
-    display: inline;
-    padding: 0.5em;
-    padding-left: 0.6em;
-    margin-bottom: 0.2em;
-    margin-right: 0;
-    background: rgba(23, 207, 69, 0.85);
-    color: rgba(249, 249, 249, 0.9);
-    font-size: 2.5em;
-    border: 1px solid white;
-    box-sizing: border-box;
-}   
-
-.nav li {
-    display: inline;
-    color: rgba(249, 249, 249, 0.9);
-    text-decoration: none;
-}  
-
-.nav ul {
-    max-width: 1240px;
-    margin: 0;
-    margin-bottom: 1em;
-    padding: 0;
-    list-style-type: none;
-    list-style: none;
-    font-size: 1.5em;
-    font-weight: 300;
-}
-
-.nav li span {
-    display: inline;
-}
-
-.nav i {
-    position: relative;
-    display: inline;
-    margin: 0 auto;
-    padding: 0.4em;
-    font-size: 1em;
-}	
-
+            
 .nav {
-    margin-top: 2.5em;
-    margin-bottom: 2.5em;
-}
-
-.hole_num {
-    z-index: 2;
-    position: absolute;
-    margin-left: 5vw;
-    margin-top: 1vh;
-    color: rgb(249, 249, 249);
-    font-size: 10em;
-    text-shadow: 2px 2px black;
-}
-
-.msg {
-    display: inline;
-    width: 50%;
-    margin-top: 0.2em;
-    padding: 0.3em;
-    padding-left: 2em;
-    padding-right: 2em;
-    font-size: 3em;
-    background: rgba(23, 207, 69, 0.85);
-    color: rgba(249, 249, 249, 0.9);
+    margin-bottom: 0.5em;
 }
             
-select {
-    display: inline;
-    width: 50%;
-    margin-top: 0.2em;
-    padding: 0.05em;
-    background: rgba(23, 207, 69, 0.85);
-    color: rgba(249, 249, 249, 0.9);
-    font-size: 3em;
-    -webkit-appearance:none;
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    overflow: hidden;
+    background-color: rgba(23, 207, 69, 0.85);
+}
+
+li {
+    width: 20%;
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    padding: 0;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    font-size: 3.5em;
+    text-align: center;
+    text-decoration: none;
+ }
+            
+.title {
+    display: block;
+    width: 59%;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+            
+.club_select {
+    background: url(images/down_arrow_select.jpg) no-repeat right white;
+    background-size: contain;
+    overflow: hidden;
+    width: 90%;
+    padding-left: 0.2em;
+    font-size: 1em;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.hole_info {
+    z-index: 2;
+    position: absolute;
+    margin-top: 65vh;
+    margin-left: 75vw;
+    color: black;
+    text-shadow: 3px 3px white;
+    border-right: 2px solid black;
+}
+            
+.heading {
+    float: right;
+    font-size: 2.5em;
+    margin-right: .2em;
+    margin-bottom: -0.5em;
+}
+            
+.info {
+    float: right;
+    margin-right: .1em;
+    padding-top: .1em;
+    font-size: 5em;
+}
+            
+tr {
+    border-bottom: 2px solid black;
+}
+            
+.err_msg {
+    display: none;
+    z-index: 2;
+    position: absolute;
+    width: 58%;
+    overflow: hidden;
+    margin-top: 0;
+    margin-left: 20%;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    font-size: 2.5em;
+    text-align: center;
+    background-color: rgb(23, 207, 69);
+    color: white;
 }

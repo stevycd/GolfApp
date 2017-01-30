@@ -1,11 +1,11 @@
 /* Icon Styles */
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/index_fonts/icomoon.eot?lryqix');
-  src:  url('fonts/index_fonts/icomoon.eot?lryqix#iefix') format('embedded-opentype'),
-        url('fonts/index_fonts/icomoon.ttf?lryqix') format('truetype'),
-        url('fonts/index_fonts/icomoon.woff?lryqix') format('woff'),
-        url('fonts/index_fonts/icomoon.svg?lryqix#icomoon') format('svg');
+  src:  url('fonts/index/icomoon.eot?lryqix');
+  src:  url('fonts/index/icomoon.eot?lryqix#iefix') format('embedded-opentype'),
+        url('fonts/index/icomoon.ttf?lryqix') format('truetype'),
+        url('fonts/index/icomoon.woff?lryqix') format('woff'),
+        url('fonts/index/icomoon.svg?lryqix#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -120,4 +120,30 @@ h1 {
     margin-top: 0;
     padding: 0.5em;
     background: rgba(15, 138, 46, 0.85);
+}
+
+p {
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+    margin: 0;
+}
+        
+.selector {
+    display: none;
+    color: rgba(249, 249, 249, 0.9);
+    text-decoration: none;
+    font-size: 0.8em;
+    padding: 0.5em;
+    background: rgba(25, 230, 77, 0.85);
+}
+        
+select {
+    background: url(images/down_arrow_select.jpg) no-repeat right white;
+    background-size: contain;
+    overflow: hidden;
+    width: 100%;
+    padding-left: 0.2em;
+    font-size: 1em;
+    -webkit-appearance: none;
+    appearance: none;
 }
