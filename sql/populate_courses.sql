@@ -73,3 +73,6 @@ INSERT INTO courses (CID,Course_Name,HID,Hole_Name,Par,Hole_lat,Hole_lng,Cen_lat
 VALUES (2, "Langlands", 17, "The Hawthorns", 4,     55.72980, -4.17902, 55.73004, -4.17632, 55.73053, -4.17373, 17);
 INSERT INTO courses (CID,Course_Name,HID,Hole_Name,Par,Hole_lat,Hole_lng,Cen_lat,Cen_lng,Tee_lat,Tee_lng,Zoom) 
 VALUES (2, "Langlands", 18, "Langlands Hame", 4,    55.73031, -4.17247, 55.72973, -4.17479, 55.72938, -4.17824, 17);
+
+INSERT INTO courses (CID,Course_Name,HID,Hole_Name,Par,Hole_lat,Hole_lng,Cen_lat,Cen_lng,Tee_lat,Tee_lng,Zoom) 
+VALUES (0, "Test", 1, "Test", 4,    55.73844, -4.03253, 55.73844, -4.03036, 55.73871, -4.028094, 17);

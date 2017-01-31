@@ -11,7 +11,6 @@
     $db=mysql_select_db(DB_NAME,$con) or die("Failed to connect to MySQL: " . mysql_error());
 				
     $result = mysql_query("SELECT * FROM courses WHERE HID=1");
-//    $row = mysql_fetch_array($result);
 ?> 
 
 <!DOCTYPE HTML>
@@ -80,9 +79,17 @@
             ?>
         };
         
+        var clear_storage = function () {
+            for(i = 1; i <= 18; i++) {
+                localStorage.removeItem("Map"+i);
+                localStorage.removeItem("Scr"+i);
+            }
+        };
+        
         $(document).ready(function() {
             <?php if (isset($_SESSION['UserName'])) { ?>
                 create_course_slt();       
+                clear_storage();
                 
                 document.getElementById('prev_rounds_btn').href = "#";
                 document.getElementById('statistics_btn').href = "#";

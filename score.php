@@ -187,6 +187,9 @@
         </table>
     </body>
     <script type="text/javascript">
+        var CID = <?php echo $CID ?>;
+        var HID = <?php echo $HID ?>;
+        
         var create_score_slt = function () {
             var par = <?php echo $row['Par'] ?>;
             var score_slt = document.getElementById('score');
@@ -195,42 +198,56 @@
                 o.text = i; o.value = i;
                 if(i === 0)
                     o.text = "Did Not Play";
-                if(i === 1)
+                else if(i === 1)
                     o.text = "In one: " + o.text;
-                if((par-3) === i && i > 1)
+                else if((par-3) === i && i > 1)
                     o.text = "Albatross: " + o.text;
-                if((par-2) === i && i > 1)
+                else if((par-2) === i && i > 1)
                     o.text = "Eagle: " + o.text;
-                if((par-1) === i && i > 1)
+                else if((par-1) === i && i > 1)
                     o.text = "Birdie: " + o.text;
-                if(par === i) {
+                else if(par === i) 
                     o.text = "Par: " + o.text;
-                    o.selected = true;
-                }
-                if((par+1) === i)
+                else if((par+1) === i)
                     o.text = "Bogey: " + o.text;
-                if((par+2) === i)
+                else if((par+2) === i)
                     o.text = "2 Bogey: " + o.text;
-                if((par+3) === i)
+                else if((par+3) === i)
                     o.text = "3 Bogey: " + o.text;
-                if((par+4) === i)
+                else if((par+4) === i)
                     o.text = "4 Bogey: " + o.text;
-                if((par+5) === i)
+                else if((par+5) === i)
                     o.text = "5 Bogey: " + o.text;
-                if((par+6) === i)
+                else if((par+6) === i)
                     o.text = "6 Bogey: " + o.text;
-                if((par+7) === i)
+                else if((par+7) === i)
                     o.text = "7 Bogey: " + o.text;
                 score_slt.add(o);
             }
+            var scr = JSON.parse(localStorage.getItem("Scr"+HID));
+            if(scr !== null) 
+                score_slt.value = scr.Score;
+            else 
+                score_slt.value = par;
         };
         
         var create_putts_slt = function () {
-            var putts_slt = document.getElementById('putts');
-            for(j = 0; j < document.getElementById('score').selectedIndex ; j++) {
+            var putts_slt = document.getElementById('putts'),
+                score_slt = document.getElementById('score');
+  
+            for(j = 0; j <= score_slt.selectedIndex ; j++) {
                 o = document.createElement('option');
                 o.text = j; o.value = j;
                 putts_slt.add(o);
+            }
+            if(score_slt.selectedIndex === 0) 
+                putts_slt.value = 0;
+            else {
+                var scr = JSON.parse(localStorage.getItem("Scr"+HID));
+                if(scr !== null) 
+                    putts_slt.value = scr.Putts;
+                else 
+                    putts_slt.value = score_slt.selectedIndex-1;
             }
         };
         
@@ -243,16 +260,13 @@
         };
         
         document.getElementById('next_hole_btn').onclick = function() {
-            var CID = <?php echo $CID ?>;
-            var HID = <?php echo $HID ?>;
             var score = {
                 Score: document.getElementById('score').value,
                 Putts: document.getElementById('putts').value,
                 Tee: document.getElementById('tee').value
             };
             if (typeof(Storage) !== "undefined") {
-                console.log(score.Score + " " + score.Putts + " " + score.Tee);
-                localStorage.setItem("Scr"+HID, score);
+                localStorage.setItem("Scr"+HID, JSON.stringify(score));
             } else {
                 console.log("No Support for Local Storage");
             }
@@ -263,8 +277,6 @@
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
-            var CID = <?php echo $CID ?>;
-            var HID = <?php echo $HID ?>;
             if(HID >= 1) window.location =  "map.php?cid="+CID+"&hid="+HID; 
             else window.location = "index.php"; 
         };
@@ -272,6 +284,11 @@
         window.onload = function () {
             document.getElementById('hole_num').innerHTML = "<?php echo $HID ?>"; 
             document.getElementById('hole_name').innerHTML = "<?php echo $row['Hole_Name'] ?>"; 
+            var scr = JSON.parse(localStorage.getItem("Scr"+HID));
+            if(scr !== null) 
+                document.getElementById('tee').value = scr.Tee;
+            else 
+                document.getElementById('tee').value = "1W";
             
             create_score_slt();
             create_putts_slt();

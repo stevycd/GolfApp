@@ -92,6 +92,8 @@
         </div>
     </body>
     <script>    
+        var CID = <?php echo $CID ?>;
+        var HID = <?php echo $HID ?>;
         var shots = Array();
     
         var flagIcon = L.icon({
@@ -140,10 +142,9 @@
             
             add_tee(teeLat, teeLng);
             add_hole(holeLat, holeLng);
-//            add_marker(55.74251, -4.14712);
         };
         
-        var add_tee = function (teeLat, teeLng) { // 55.74371, -4.14736
+        var add_tee = function (teeLat, teeLng) {
             teeMarker = L.marker(new L.LatLng(teeLat, teeLng), {clickable: true, draggable: true}).addTo(map);
             markers.push(teeMarker.getLatLng()); 
         };  
@@ -188,16 +189,13 @@
                     var select = document.getElementById('club_select'),
                         club = select.options[select.selectedIndex].value;
                     add_marker(position.coords.latitude, position.coords.longitude, club);
-//                    add_marker(55.74527, -4.14554, club);
                 });
             }
         };   
            
         document.getElementById('next_hole_btn').onclick = function() {
-            var CID = <?php echo $CID ?>;
-            var HID = <?php echo $HID ?>;
             if (typeof(Storage) !== "undefined") {
-                localStorage.setItem("Map"+HID, shots);
+                localStorage.setItem("Map"+HID, JSON.stringify(shots));
             } else {
                 console.log("No Support for Local Storage");
             }
@@ -205,11 +203,13 @@
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
-            var CID = <?php echo $CID ?>;
-            var HID = <?php echo $HID ?>;
             if(HID > 1) window.location =  "score.php?cid="+CID+"&hid="+(HID-1); 
             else window.location = "index.php"; 
         };
+        
+        window.addEventListener("orientationchange", function() {
+            window.location = "scorecard.php?cid="+CID+"&hid="+HID;
+        }, false);
         
         window.onload = init_map;
     </script>
