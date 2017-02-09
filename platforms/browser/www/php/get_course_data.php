@@ -10,12 +10,12 @@
     $con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD) or die("Failed to connect to Customer Database: " . mysql_error());
     $db=mysql_select_db(DB_NAME,$con) or die("Failed to connect to Customer Database: " . mysql_error());
     
-    return_Courses();  
+    $CID =  mysql_real_escape_string($_POST['CID']);
+    return_Course_Data($CID);  
     
-    function return_Courses() {		
-        $Data = mysql_query("SELECT * FROM courses");
-        while ($row = mysql_fetch_array($Data)) {
-            echo json_encode($row['Course_Name']);
-        }
+    function return_Course_Data($CID) {		
+        $Data = mysql_query("SELECT * FROM courses WHERE CID='$CID'");
+        echo json_encode(mysql_fetch_array($Data));
     }
 ?>
+

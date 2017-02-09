@@ -56,7 +56,7 @@
 				crossDomain: true,
 				cache: false,
 				success: function (result) {
-					var courses = result.split(/(?=[A-Z])/);
+					courses = result.split("\"").filter(n => n);
 					for(i = 0; i < courses.length; i++) {
 						var o = document.createElement('option');
                     	o.text = courses[i];
@@ -98,8 +98,11 @@
                     var course_slt = document.getElementById('course_select'),
                         course = course_slt.options[course_slt.selectedIndex].value;
                     $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_cid.php", { Course: course },  
-                    function(result) {  
-                        window.location = "map.html?cid="+result+"&hid=1";
+                    function(cid) {  
+                        $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_typ.php", { CID: cid },
+                        function(typ) {
+                            window.location = "map.html?cid="+cid+"&hid=1&typ="+typ;
+                        });
                     });  
                 }; 
 			} else {

@@ -15,7 +15,7 @@
     return_Hole_Data($CID, $HID);  
     
     function return_Hole_Data($CID, $HID) {		
-        $Data = mysql_query("SELECT * FROM courses WHERE CID='$CID' AND HID='$HID'");
+        $Data = mysql_query("SELECT * FROM holes WHERE CID='$CID' AND HID='$HID'");
         echo json_encode(mysql_fetch_array($Data));
     }
 ?>

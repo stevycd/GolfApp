@@ -74,7 +74,8 @@
 	<script type="text/javascript" src="js/jquery.js"></script>
     <script> 
 		var CID = parseInt($_GET('cid')),
-        	HID = parseInt($_GET('hid'));	
+        	HID = parseInt($_GET('hid')),	
+            TYP = parseInt($_GET('typ'));
 		function $_GET(param) {
 			var vars = {};
 			window.location.href.replace(location.hash, '').replace( /[?&]+([^=&]+)=?([^&]*)?/gi,
@@ -205,11 +206,11 @@
             } else {
                 console.log("No Support for Local Storage");
             }
-            window.location = "score.html?cid="+CID+"&hid="+HID;
+            window.location = "score.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
-            if(HID > 1) window.location =  "score.html?cid="+CID+"&hid="+(HID-1); 
+            if(HID > 1) window.location =  "score.html?cid="+CID+"&hid="+(HID-1)+"&typ="+TYP; 
             else window.location = "index.html"; 
         };
 		
@@ -218,7 +219,7 @@
 		};
 		
 		window.addEventListener("orientationchange", function() {
-            window.location = "scorecard.html?cid="+CID+"&hid="+HID;
+            window.location = "scorecard.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
         }, false);
 
         $(document).ready(function() {

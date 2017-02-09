@@ -14,7 +14,7 @@
     return_Course_Data($CID);  
     
     function return_Course_Data($CID) {		
-        $Data = mysql_query("SELECT * FROM courses WHERE CID='$CID'");
+        $Data = mysql_query("SELECT * FROM holes WHERE CID='$CID'");
         while($row = mysql_fetch_array($Data)){
             echo $row['Par'];
         }

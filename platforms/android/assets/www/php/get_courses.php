@@ -13,9 +13,9 @@
     return_Courses();  
     
     function return_Courses() {		
-        $Data = mysql_query("SELECT * FROM courses WHERE HID=1");
+        $Data = mysql_query("SELECT * FROM courses");
         while ($row = mysql_fetch_array($Data)) {
-            print_r($row['Course_Name']);
+            echo json_encode($row['Course_Name']);
         }
     }
 ?>

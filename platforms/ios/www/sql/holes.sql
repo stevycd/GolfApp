@@ -1,0 +1,12 @@
+CREATE TABLE holes
+(
+CID int NOT NULL,
+HID int NOT NULL,
+Hole_Name VARCHAR(40) NOT NULL,
+Par int NOT NULL,
+Hole_lat REAL NOT NULL,
+Hole_lng REAL NOT NULL,
+Tee_lat REAL NOT NULL,
+Tee_lng REAL NOT NULL,
+Zoom int NOT NULL
+);

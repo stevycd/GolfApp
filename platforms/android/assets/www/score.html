@@ -172,7 +172,8 @@
     <script type="text/javascript">
 		var row;
         var CID = parseInt($_GET('cid')),
-        	HID = parseInt($_GET('hid'));	
+        	HID = parseInt($_GET('hid')),	
+            TYP = parseInt($_GET('typ'));
 		function $_GET(param) {
 			var vars = {};
 			window.location.href.replace(location.hash, '').replace( /[?&]+([^=&]+)=?([^&]*)?/gi,
@@ -257,10 +258,13 @@
         
         document.getElementById('next_hole_btn').onclick = function() {
             save_hole_data();
-            if(HID < 18) window.location =  "map.html?cid="+CID+"&hid="+(HID+1);
+            var num_holes = 0;
+            if(!TYP) num_holes = 18;
+            else num_holes = 9;
+            if(HID < num_holes) window.location =  "map.html?cid="+CID+"&hid="+(HID+1)+"&typ="+TYP;
             else {
 				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/push_round_data.php", {
-					Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data()
+					Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes)
 				}, function() {
 					window.location = "index.html";
 				});
@@ -269,7 +273,7 @@
         
         document.getElementById('prev_hole_btn').onclick = function() {
 			save_hole_data();
-            if(HID >= 1) window.location =  "map.html?cid="+CID+"&hid="+HID; 
+            if(HID >= 1) window.location =  "map.html?cid="+CID+"&hid="+HID+"&typ="+TYP; 
             else window.location = "index.html"; 
         };
 		
@@ -286,14 +290,14 @@
             }
 		};
 		
-		var get_round_data = function () {
+		var get_round_data = function (num_holes) {
 			var data = [];
-			for(i = 1; i <= 18; i++) {
+			for(i = 1; i <= num_holes; i++) {
 				data.push(localStorage.getItem("Map"+i));
 				data.push(localStorage.getItem("Scr"+i));
 			}
 			return JSON.stringify(data);
-		}
+		};
         
         window.onload = function () {
 			$.ajax({
