@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <style>
+            /* Global Styles */
+            html * {
+                font-family:  Tahoma, Geneva, sans-serif;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }  
+            table, th, td {
+				background: white;
+				border: 1px solid black;
+				border-collapse: collapse;
+				width: 100%;
+				font-size: .9em;
+            }
+            th, td {
+				padding: 5px;
+				text-align: center;
+				width: 5%;
+            }
+            .title {
+                background: #17cf45;
+                color: white;
+            }
+            .scr {
+                color: white;
+            }
+            .total {
+                background: #e6e6e6;
+            }
+            p {
+				background: rgba(23, 207, 69, 0.85);
+                color: rgba(249, 249, 249, 0.9);
+				width: 100%;
+				padding-bottom: .1em;
+				margin-top: 0;
+				margin-bottom: 1em;
+				font-size: 2em;
+				text-align: center;
+            }
+        </style>
+    </head>
+    <body background="img/background.jpg">
+	<p id="course_name"></p>
+        <table id="scorecard">
+            <thead>
+                <tr>
+                    <th class="title"></th>
+                    <th class="title">1</th>
+                    <th class="title">2</th>
+                    <th class="title">3</th>
+                    <th class="title">4</th>
+                    <th class="title">5</th>
+                    <th class="title">6</th>
+                    <th class="title">7</th>
+                    <th class="title">8</th>
+                    <th class="title">9</td>
+                    <th class="title">10</th>
+                    <th class="title">11</th>
+                    <th class="title">12</th>
+                    <th class="title">13</th>
+                    <th class="title">14</th>
+                    <th class="title">15</th>
+                    <th class="title">16</th>
+                    <th class="title">17</th>
+                    <th class="title">18</th>
+                    <th class="title">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="row_score">
+                    <th class="title">Score</th>
+                    <td id="scr1" class="scr"></td>
+                    <td id="scr2" class="scr"></td>
+                    <td id="scr3" class="scr"></td>
+                    <td id="scr4" class="scr"></td>
+                    <td id="scr5" class="scr"></td>
+                    <td id="scr6" class="scr"></td>
+                    <td id="scr7" class="scr"></td>
+                    <td id="scr8" class="scr"></td>
+                    <td id="scr9" class="scr"></td>
+                    <td id="scr10" class="scr"></td>
+                    <td id="scr11" class="scr"></td>
+                    <td id="scr12" class="scr"></td>
+                    <td id="scr13" class="scr"></td>
+                    <td id="scr14" class="scr"></td>
+                    <td id="scr15" class="scr"></td>
+                    <td id="scr16" class="scr"></td>
+                    <td id="scr17" class="scr"></td>
+                    <td id="scr18" class="scr"></td>
+                    <td id="total_score" class="total"></td>
+                </tr>
+                <tr id="row_putts">
+                    <th class="title">Putts</th>
+                    <td id="putt1"></td>
+                    <td id="putt2"></td>
+                    <td id="putt3"></td>
+                    <td id="putt4"></td>
+                    <td id="putt5"></td>
+                    <td id="putt6"></td>
+                    <td id="putt7"></td>
+                    <td id="putt8"></td>
+                    <td id="putt9"></td>
+                    <td id="putt10"></td>
+                    <td id="putt11"></td>
+                    <td id="putt12"></td>
+                    <td id="putt13"></td>
+                    <td id="putt14"></td>
+                    <td id="putt15"></td>
+                    <td id="putt16"></td>
+                    <td id="putt17"></td>
+                    <td id="putt18"></td>
+                    <td id="total_putts" class="total"></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+	<script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+		var row;
+		var CID = parseInt($_GET('cid')),
+        	HID = parseInt($_GET('hid'));	
+		function $_GET(param) {
+			var vars = {};
+			window.location.href.replace(location.hash, '').replace( /[?&]+([^=&]+)=?([^&]*)?/gi,
+				function(m, key, value) {
+					vars[key] = value !== undefined ? value : '';
+				}
+			);
+			if (param) {
+				return vars[param] ? vars[param] : null;	
+			}
+			return vars;
+		};
+		
+        var table = document.getElementById('scorecard'),
+            tbody = table.getElementsByTagName("tbody")[0],
+            pars;
+        
+        var add_course_name = function () {
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_hole_data.php", { CID: CID, HID: 1 },
+			function(result) {
+				var row = JSON.parse(result);
+            	document.getElementById('course_name').innerHTML = row['Course_Name'];
+			});
+        };
+        
+        var add_row_par = function () {
+            var row_par = tbody.insertRow(0),
+                title = row_par.insertCell(0);
+                title.innerHTML = "<b>Par</b>";
+                title.style.background = "#17cf45";
+                title.style.color = "white";
+			var par_total = 0;
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_pars.php", { CID: CID },
+			function(result) {
+				pars = result;
+				for(i = 1; i <= 18; i++) {
+					var cell = row_par.insertCell(i),
+						node = document.createTextNode(pars[i-1]);
+					cell.appendChild(node);
+					par_total += parseInt(pars[i-1]);
+				}
+				var total = row_par.insertCell(19),
+                node = document.createTextNode(par_total);
+                total.style.background = "#e6e6e6";
+                total.appendChild(node);
+				
+				add_row_userdata();
+			});      
+        };
+            
+        var add_row_userdata = function () {
+            var total_scr = 0,
+                total_putt = 0;
+            for(i = 1; i <= 18; i++) {
+                var scr = JSON.parse(localStorage.getItem("Scr"+i));
+                if(scr !== null) {
+                    var cell = document.getElementById('scr'+i);
+                    var score = parseInt(scr.Score);
+                    cell.innerHTML = ""+scr.Score;
+                    cell.style.background = get_score_color(score, i-1);
+					if(score === 0) cell.style.color = "black";
+                    document.getElementById('putt'+i).innerHTML = ""+scr.Putts;
+                    total_scr += parseInt(scr.Score);
+                    total_putt += parseInt(scr.Putts);
+                }
+            } 
+            document.getElementById('total_score').innerHTML = total_scr;
+            document.getElementById('total_putts').innerHTML = total_putt;
+        };
+        
+        var get_score_color = function (score, hid) {
+            var color;
+			var par = parseInt(pars[hid]);
+			if(score === 0)
+				color = "#ffffff";
+            else if(score === par) 
+                color = "#1a75ff";
+            else if(score === par-1) 
+                color = "#b30000";
+            else if(score < par-1)
+                color = "#ff6600";
+            else if(score === par+1) 
+                color = "#00b33c";
+            else if(score === par+2) 
+                color = "#808080";
+            else if(score > par+2)
+                color = "#1a1a1a";
+            return color;
+        };
+            
+        window.addEventListener("orientationchange", function() {
+            window.location = "map.html?cid="+CID+"&hid="+HID;
+        }, false);
+        
+        window.onload = function () {
+			add_course_name();
+			add_row_par();
+        };
+    </script>
+</html>

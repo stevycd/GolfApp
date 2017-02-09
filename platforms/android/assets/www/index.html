@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="stylesheet" href="css/index.css"/> 
+        <title>Golf App</title>
+    </head>
+    <body background="img/background.jpg">
+        <h1 align="center">Golf App</h1>
+        <nav class="nav">
+            <ul>
+                <li class="play_golf">
+                    <a id="play_golf_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-golf"></i></span><span>Play Golf</span>
+                    </a>
+                </li>
+                <p id="selector" class="selector">
+                    <select id="course_select" class="course_select">
+                        <option value="" disabled selected>Select a Course</option>
+                    </select>
+                </p>
+                <li class="prev_rounds">
+                    <a id="prev_rounds_btn" href="account_out.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-folder-open"></i></span><span>Previous Rounds</span>
+                    </a>
+                </li>
+                <li class="statistics">
+                    <a id="statistics_btn" href="account_out.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-stats-dots"></i></span><span>Statistics</span>
+                    </a>
+                </li>
+                <li class="account">
+                    <a id="account_btn" href="account_out.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-wrench"></i></span><span>Account</span>
+                    </a>
+                </li>
+                <p id="log_msg" class="log_msg"></p>
+            </ul>
+        </nav>
+    </body>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+        var create_course_slt = function () {
+            var course_slt = document.getElementById('course_select');
+			$.ajax({
+				type: "POST",
+				url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_courses.php",
+				crossDomain: true,
+				cache: false,
+				success: function (result) {
+					var courses = result.split(/(?=[A-Z])/);
+					for(i = 0; i < courses.length; i++) {
+						var o = document.createElement('option');
+                    	o.text = courses[i];
+						o.value = courses[i];
+						course_slt.add(o);
+					}
+				}
+			});
+        };
+        
+        var clear_storage = function () {
+            for(i = 1; i <= 18; i++) {
+                localStorage.removeItem("Map"+i);
+                localStorage.removeItem("Scr"+i);
+            }
+        };
+        
+        $(document).ready(function() {
+			if(localStorage.getItem("userID") !== null) {
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_name.php", { email: localStorage.getItem("userID")},
+				function(result) {
+					document.getElementById('log_msg').style.display = "block";
+					document.getElementById('log_msg').innerHTML = "Logged in as: " + result;
+				});
+				
+				create_course_slt();       
+                clear_storage();
+                
+                document.getElementById('prev_rounds_btn').href = "#";
+                document.getElementById('statistics_btn').href = "#";
+                document.getElementById('account_btn').href = "account_in.html";
+
+                document.getElementById('play_golf_btn').onclick = function () {
+                    var select = document.getElementById('selector');
+                    select.style.display = select.style.display === "block" ? "none" : "block";
+                };
+                
+                document.getElementById('course_select').onchange = function() {
+                    var course_slt = document.getElementById('course_select'),
+                        course = course_slt.options[course_slt.selectedIndex].value;
+                    $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_cid.php", { Course: course },  
+                    function(result) {  
+                        window.location = "map.html?cid="+result+"&hid=1";
+                    });  
+                }; 
+			} else {
+				document.getElementById('play_golf_btn').href = "account_out.html";
+			}
+        });
+    </script>
+</html>

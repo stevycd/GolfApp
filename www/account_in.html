@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="stylesheet" href="css/account_in.css"/> 
+        <title>Golf Caddie</title>
+    </head>
+    <body background="img/background.jpg">
+        <h1 align="center">Account</h1>
+        <nav class="nav">
+            <ul>
+                <li class="settings">
+                    <a id="set_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-cogs"></i></span><span>Settings</span>
+                    </a>
+                </li>
+                <form id="set_form" class="set_form" name="set_form" method="POST">
+                    Change Name         <br><p id="name_err_msg" class="name_err_msg" style="display: none"></p>
+                                            <input type="text" name="full_name" id="set_full_name" size="40" placeholder="New Name" required>
+                                            <input type="button" name="conf_name" id="conf_name_btn" value="Confirm">
+                    Change Password     <br><p id="pass_err_msg" class="pass_err_msg" style="display: none"></p>
+                                            <input type="password" name="old_pass" id="old_pass" size="40" placeholder="Old Password" required>
+                                            <input type="password" name="new_pass" id = "new_pass" size="40" placeholder="New Password" required> 
+                                            <input type="button" name="conf_pass" id="conf_pass_btn" value="Confirm">
+                    <input type="button" name="del_acc" id="del_acc_btn" value="Delete Account">
+                </form>
+                <li class="sign_out">
+                    <a id="sign_out_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-exit"></i></span><span>Sign-out</span>
+                    </a>
+                </li>
+                <li class="home">
+                    <a href="index.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-home"></i></span><span>Home</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </body>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">                
+        document.getElementById('set_btn').onclick = function () {
+            reset();            
+            set_form.style.display = set_form.style.display === "block" ? "none" : "block";
+        };
+        var reset = function () {
+            name_err_msg.style.display = "none";
+            pass_err_msg.style.display = "none";
+            
+            set_full_name.value = "";
+            old_pass.value = "";
+            new_pass.value = "";
+        };
+		document.getElementById('sign_out_btn').onclick = function () {
+			localStorage.removeItem("userID");
+			window.location = "index.html";
+		};
+        document.getElementById('conf_name_btn').onclick = function () {
+            name_err_msg.style.display = "block";
+            pass_err_msg.style.display = "none";
+            if($('#set_full_name').val() === ""){
+                name_err_msg.style.color = "#e60000";
+                name_err_msg.innerHTML = "New name must not be empty.";
+            } else {
+				$.ajax({
+					type: "POST",
+					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/change_name.php",
+					data: { fullname: $('#set_full_name').val() },
+					crossDomain: true,
+					cache: false,
+					success: function (result) {
+						if(result == "success") {
+							name_err_msg.style.color = "white";
+                            name_err_msg.innerHTML = "Name change successful.";
+                            set_full_name.value = "";
+						} else {
+							name_err_msg.style.color = "#e60000";
+                            name_err_msg.innerHTML = "Name change failed.";
+						}
+					}
+				});
+            }
+        };
+        document.getElementById('conf_pass_btn').onclick = function () {
+            pass_err_msg.style.display = "block";
+            name_err_msg.style.display = "none";
+            if(old_pass.value === "" || new_pass.value === ""){
+                pass_err_msg.style.color = "#e60000";
+                pass_err_msg.innerHTML = "Password fields must not be empty.";
+            } else {
+				$.ajax({
+					type: "POST",
+					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/change_password.php",
+					data: { old_password: old_pass.value, new_password: new_pass.value },
+					crossDomain: true,
+					cache: false,
+					success: function (result) {
+						if(result == "success") {
+							pass_err_msg.style.color = "white";
+                            pass_err_msg.innerHTML = "Password change sucessful.";
+                            old_pass.value = "";
+                            new_pass.value = "";
+						} else {
+							pass_err_msg.style.color = "#e60000";
+                            pass_err_msg.innerHTML = "Password change failed.";
+						}
+					}
+				});
+            }
+        };
+        document.getElementById('del_acc_btn').onclick = function () {
+            var confirmed = confirm("Are you sure you want to Delete your Account?");
+            if(confirmed) {
+				$.ajax({
+					type: "POST",
+					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/delete_account.php",
+					crossDomain: true,
+					cache: false,
+					success: function (result) {
+						if(result == "success") {
+							localStorage.removeItem("userID");
+							window.location = "index.html";
+						} else {
+							alert(result);
+						}
+					}
+				});
+            }
+        };
+    </script>
+</html>
