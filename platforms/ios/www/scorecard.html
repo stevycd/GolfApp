@@ -258,7 +258,7 @@
         };
             
         window.addEventListener("orientationchange", function() {
-            window.location = "map.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+            window.history.back();
         }, false);
         
         $(document).ready(function() {

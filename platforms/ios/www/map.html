@@ -211,7 +211,12 @@
         
         document.getElementById('prev_hole_btn').onclick = function() {
             if(HID > 1) window.location =  "score.html?cid="+CID+"&hid="+(HID-1)+"&typ="+TYP; 
-            else window.location = "index.html"; 
+            else {
+                var confirmed = confirm("Returning home will discard your round, are you sure?");
+                if(confirmed) {
+                    window.location = "index.html";
+                }
+            } 
         };
 		
 		function onError(err) {

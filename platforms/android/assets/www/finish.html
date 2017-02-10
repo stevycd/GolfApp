@@ -1,0 +1,303 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <style>
+            @font-face {
+                font-family: 'icomoon';
+                src:  url('css/fonts/finish/icomoon.eot?7astdl');
+                src:  url('css/fonts/finish/icomoon.eot?7astdl#iefix') format('embedded-opentype'),
+                      url('css/fonts/finish/icomoon.ttf?7astdl') format('truetype'),
+                      url('css/fonts/finish/icomoon.woff?7astdl') format('woff'),
+                      url('css/fonts/finish/icomoon.svg?7astdl#icomoon') format('svg');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            [class^="icon-"], [class*=" icon-"] {
+                font-family: 'icomoon' !important;
+                speak: none;
+                font-style: normal;
+                font-weight: normal;
+                font-variant: normal;
+                text-transform: none;
+                line-height: 1;
+            }
+
+            .icon-floppy-disk:before {
+                content: "\e962";
+            }
+            .icon-bin:before {
+                content: "\e9ac";
+            }
+            .icon-arrow-left:before {
+                content: "\ea38";
+            }
+            
+            /* Global Styles */
+            html * {
+                font-family:  Tahoma, Geneva, sans-serif;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }            
+            
+            .nav {
+                margin-bottom: 2em;
+            }
+            
+            .navul {
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+                overflow: hidden;
+                background-color: rgba(23, 207, 69, 0.85);
+            }
+
+            .navli {
+                width: 20%;
+                float: left;
+            }
+
+            .navli a {
+                display: block;
+                color: white;
+                padding: 0;
+                padding-top: .5em;
+                padding-bottom: .5em;
+                font-size: 1.5em;
+                text-align: center;
+                text-decoration: none;
+            }
+            
+            #title {
+                width: 79%;
+                border-left: 1px solid white;
+            }
+            
+            .btns ul {
+                max-width: 1240px;
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+                list-style: none;
+                font-size: 1.5em;
+                font-weight: 300;
+            }
+
+            .btns li {
+                margin-top: 0.2em;
+            }
+
+            .btns li span {
+                display: inline-block;
+                height: 90%;
+            }
+
+            .btns a {
+                display: block;
+                color: rgba(249, 249, 249, 0.9);
+                text-decoration: none;
+                padding: 0.5em;
+            }
+
+            #round_info {
+                background: rgba(25, 230, 77, 0.85);
+            }
+
+            #save_round {
+                background: rgba(23, 207, 69, 0.85);
+            }
+
+            #discard {
+                background: rgba(18, 161, 54, 0.85);
+            }
+
+            .icon {
+                width: 25%;
+            }
+
+            .icon + span {
+                font-size: 1.1em;
+            }
+
+            .btns i {
+                position: relative;
+                display: inline-block;
+                margin: 0 auto;
+                padding: 0.4em;
+                border-radius: 50%;
+                font-size: 1.2em;
+                box-shadow: 0 0 0 0.8em transparent;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            th, td  {
+                font-size: 1em;
+                border: 1px solid white;
+            }
+            th {
+                padding-left: 0.5em; 
+            }
+            td {
+                width: 20%;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body background="img/background.jpg">
+        <nav class="nav">
+            <ul class="navul">
+                <li class="navli">
+                    <a id="prev_hole_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-arrow-left"></i></span>
+                    </a>
+                </li>
+                <li class="navli" id="title">
+                    <a>
+                        <span id="course_name"></span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <nav class="btns">
+            <ul class="btnsul">
+                <li class="btnsli" id="round_info">
+                    <a id="round_info">
+                        <table style="width:100%">
+                            <tr>
+                                <th>Par</th>
+                                <td id="row_par"></td> 
+                            </tr>
+                            <tr>
+                                <th>Score</th>
+                                <td id="row_score"></td> 
+                            </tr>
+                            <tr>
+                                <th>Putts</th>
+                                <td id="row_putts"></td> 
+                            </tr>
+                        </table>
+                    </a>
+                </li>
+                <li class="btnsli" id="save_round">
+                    <a id="save_round_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-floppy-disk"></i></span><span>Save Round</span>
+                    </a>
+                </li>
+                <li class="btnsli" id="discard">
+                    <a id="discard_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-bin"></i></span><span>Discard</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </body>
+	<script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+		var row;
+        var CID = parseInt($_GET('cid')),
+        	HID = parseInt($_GET('hid')),	
+            TYP = parseInt($_GET('typ'));
+		function $_GET(param) {
+			var vars = {};
+			window.location.href.replace(location.hash, '').replace( /[?&]+([^=&]+)=?([^&]*)?/gi,
+				function(m, key, value) {
+					vars[key] = value !== undefined ? value : '';
+				}
+			);
+			if (param) {
+				return vars[param] ? vars[param] : null;	
+			}
+			return vars;
+		};
+        
+        var add_course_name = function () {
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_course_data.php", { CID: CID },
+			function(result) {
+				var row = JSON.parse(result);
+            	document.getElementById('course_name').innerHTML = row['Course_Name'];
+			});
+        };
+          
+        var fill_table = function () {
+            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_pars.php", { CID: CID },
+			function(result) {
+                var pars = result,
+                    num_holes = 18;
+                if(TYP) num_holes = 9;
+                add_row_par(pars, num_holes);
+                add_row_userdata(num_holes);
+            });
+        };
+        
+        var add_row_par = function (pars, num_holes) {
+			var total_par = 0;
+			for(i = 1; i <= num_holes; i++) {
+				total_par += parseInt(pars[(i-1)]);
+            }
+            document.getElementById('row_par').innerHTML = total_par;
+        };
+          
+        var add_row_userdata = function (num_holes) {
+            var total_scr = 0,
+                total_putt = 0;
+            for(i = 1; i <= num_holes; i++) {
+                var scr = JSON.parse(localStorage.getItem("Scr"+i));
+                if(scr !== null) {
+                    total_scr += parseInt(scr.Score);
+                    total_putt += parseInt(scr.Putts);
+                }
+            } 
+            document.getElementById('row_score').innerHTML = total_scr;
+            document.getElementById('row_putts').innerHTML = total_putt;
+        };
+        
+        var get_round_data = function (num_holes) {
+			var data = [];
+			for(i = 1; i <= num_holes; i++) {
+				data.push(localStorage.getItem("Map"+i));
+				data.push(localStorage.getItem("Scr"+i));
+			}
+			return JSON.stringify(data);
+		};
+        
+        document.getElementById('prev_hole_btn').onclick = function() {
+            window.location =  "score.html?cid="+CID+"&hid="+HID+"&typ="+TYP; 
+        };
+        
+        document.getElementById('save_round_btn').onclick = function () {
+            var num_holes = 18;
+            if(TYP) num_holes = 9;
+            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/push_round_data.php", {
+				Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes)
+			}, function() {
+				window.location = "index.html";
+			});  
+        };
+        
+        document.getElementById('discard_btn').onclick = function () {
+            var confirmed = confirm("Are you sure you don't want to save your round?");
+            if(confirmed) {
+                window.location = "index.html";
+            }
+        };
+        
+        window.addEventListener("orientationchange", function() {
+            window.location = "scorecard.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+        }, false);
+        
+        $(document).ready(function() {
+			add_course_name();
+            fill_table();
+        });
+    </script>
+</html>
+

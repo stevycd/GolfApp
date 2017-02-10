@@ -258,17 +258,10 @@
         
         document.getElementById('next_hole_btn').onclick = function() {
             save_hole_data();
-            var num_holes = 0;
-            if(!TYP) num_holes = 18;
-            else num_holes = 9;
+            var num_holes = 18;
+            if(TYP) num_holes = 9;
             if(HID < num_holes) window.location =  "map.html?cid="+CID+"&hid="+(HID+1)+"&typ="+TYP;
-            else {
-				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/push_round_data.php", {
-					Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes)
-				}, function() {
-					window.location = "index.html";
-				});
-			}
+            else window.location = "finish.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
@@ -298,6 +291,11 @@
 			}
 			return JSON.stringify(data);
 		};
+        
+        window.addEventListener("orientationchange", function() {
+            save_hole_data();
+            window.location = "scorecard.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+        }, false);
         
         window.onload = function () {
 			$.ajax({
