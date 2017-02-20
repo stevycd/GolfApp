@@ -1,5 +1,5 @@
 <?php
-    //start the session
+    //start the session  
     session_start();
     //destroy the session logging out the user
     session_destroy();

@@ -1,4 +1,4 @@
-<?php 
+<?php  
     session_start();
 
     define('DB_HOST', 'devweb2015.cis.strath.ac.uk');

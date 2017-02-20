@@ -72,7 +72,7 @@
             } else {
 				$.ajax({
 					type: "POST",
-					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/change_name.php",
+					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/change_name.php",
 					data: { fullname: $('#set_full_name').val() },
 					crossDomain: true,
 					cache: false,
@@ -98,7 +98,7 @@
             } else {
 				$.ajax({
 					type: "POST",
-					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/change_password.php",
+					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/change_password.php",
 					data: { old_password: old_pass.value, new_password: new_pass.value },
 					crossDomain: true,
 					cache: false,
@@ -121,7 +121,7 @@
             if(confirmed) {
 				$.ajax({
 					type: "POST",
-					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/delete_account.php",
+					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/delete_account.php",
 					crossDomain: true,
 					cache: false,
 					success: function (result) {

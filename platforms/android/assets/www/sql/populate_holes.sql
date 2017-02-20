@@ -1,5 +1,5 @@
 INSERT INTO holes (CID,HID,Hole_Name,Par,Hole_lat,Hole_lng,Tee_lat,Tee_lng,Zoom) 
-VALUES (0, "Test", 1, "Test", 4,        55.73844, -4.03253, 55.73871, -4.028094, 16);
+VALUES (0, 1, "Test", 4,        		55.73844, -4.03253, 55.73871, -4.028094, 16);
 
 INSERT INTO holes (CID,HID,Hole_Name,Par,Hole_lat,Hole_lng,Tee_lat,Tee_lng,Zoom) 
 VALUES (1, 1, "MossLand", 5,            55.74372, -4.14735, 55.74708, -4.14466, 16);

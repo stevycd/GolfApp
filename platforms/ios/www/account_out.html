@@ -51,6 +51,7 @@
         </nav>
     </body>
     <script type="text/javascript" src="js/jquery.js"></script>
+	<script src="cordova.js"></script>
     <script type="text/javascript">
         document.getElementById('reg_btn').onclick = function () {
             document.getElementById('log_form').style.display = "none";
@@ -73,33 +74,27 @@
         };
         
         document.getElementById('sign_up_btn').onclick = function () {
-            if(validate()) {
-				$.ajax({
-					type: "POST",
-					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/register.php",
-					data: {fullname: $('#reg_full_name').val(), email: $('#reg_email').val(), password: document.getElementById('reg_pass').value},
-					crossDomain: true,
-					cache: false,
-					success: function (result) {
-						if(result == "success") {
-							reset();
-							document.getElementById('reg_form').style.display = "none";
-							document.getElementById('log_form').style.display = "block";
-							document.getElementById('log_email').value = $('#reg_email').val();
+        	if(valid) {
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/register.php", { fullname: $('#reg_full_name').val(), email: $('#reg_email').val(), password: document.getElementById('reg_pass').value },
+				function(result) {
+					if(result == "success") {
+						reset();
+						document.getElementById('reg_form').style.display = "none";
+						document.getElementById('log_form').style.display = "block";
+						document.getElementById('log_email').value = $('#reg_email').val();
 
-							document.getElementById('reg_full_name').value = "";
-							document.getElementById('reg_email').value = "";
-							document.getElementById('reg_conf_email').value = ""; 
-						} else if (result == "error") {
-							alert("Error: " + result);
-						} else {
-							alert(result);
-						}
+						document.getElementById('reg_full_name').value = "";
+						document.getElementById('reg_email').value = "";
+						document.getElementById('reg_conf_email').value = ""; 
+					} else if (result == "error") {
+						alert("Error: " + result);
+					} else {
+						alert(result);
 					}
 				});
-            }
-        };
-        var validate = function () {
+        	}
+		};
+        var valid = function () {
             var fullname = $('#reg_full_name').val(),
                 email = $('#reg_email').val(),
                 conf_email = $('#reg_conf_email').val(),
@@ -129,18 +124,24 @@
         
         document.getElementById('sign_in_btn').onclick = function () {
             var email = $('#log_email').val(),
-                password = document.getElementById('log_pass').value;           
-            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/sign_in.php", { email: email, password: password },
-            function(result) {
-                if(result == "success") {
-					localStorage.setItem("userID", email);
-                    window.location = "index.html";
-                } else {
-                    reset();
-                 	log_msg.style.display = "block";
-                	log_msg.innerHTML = "Wrong Email or Password. Try again.";
-            	}
-        	});
+                password = document.getElementById('log_pass').value;    
+			if(email === "" || password === "") {
+				reset();
+                log_msg.style.display = "block";
+               	log_msg.innerHTML = "Wrong Email or Password. Try again.";
+			} else {
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/sign_in.php", { email: email, password: password },
+				function(result) {
+					if(result == "success") {
+						localStorage.setItem("userID", email);
+						window.location = "index.html";
+					} else {
+						reset();
+						log_msg.style.display = "block";
+						log_msg.innerHTML = "Wrong Email or Password. Try again.";
+					}
+				});
+			}
         };
     </script>
 </html>

@@ -1,0 +1,152 @@
+/* Icon Styles */
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/prev_rounds/icomoon.eot?e5jqbs');
+  src:  url('fonts/prev_rounds/icomoon.eot?e5jqbs#iefix') format('embedded-opentype'),
+    	url('fonts/prev_rounds/icomoon.ttf?e5jqbs') format('truetype'),
+    	url('fonts/prev_rounds/icomoon.woff?e5jqbs') format('woff'),
+    	url('fonts/prev_rounds/icomoon.svg?e5jqbs#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+
+.icon-home:before {
+  content: "\e900";
+}
+.icon-pencil2:before {
+  content: "\e906";
+}
+.icon-bin:before {
+  content: "\e9ac";
+}
+.icon-circle-down:before {
+  content: "\ea43";
+}
+
+/* Global Styles */
+html * {
+    font-family:  Tahoma, Geneva, sans-serif;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h1 {
+    font-size: 2.5em;
+    padding: 0;
+	padding-top: 0.5em;
+    margin: 0;
+    margin-bottom: 0.5em;
+    color: rgb(249, 249, 249);
+    text-shadow: 1px 1px #404040
+}
+
+h2 {
+    font-size: 1.2em;
+    padding: 0;
+	padding-top: 0.5em;
+    margin: 0;
+    color: rgb(249, 249, 249);
+    text-shadow: 1px 1px #404040
+}
+
+.nav ul {
+    max-width: 1240px;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    list-style: none;
+    font-size: 1.5em;
+    font-weight: 300;
+}
+
+.nav li {
+    margin-top: 0.2em;
+}
+
+.nav li span {
+    display: inline-block;
+    height: 90%;
+}
+
+.nav a {
+    display: block;
+    color: rgba(249, 249, 249, 0.9);
+    text-decoration: none;
+    padding: 0.3em;
+}
+
+.home {
+    background: rgba(25, 230, 77, 0.85);
+}
+
+.round {
+    background: rgba(23, 207, 69, 0.85);
+	font-size: .8em;
+}
+
+.course_name {
+	margin: 0;
+	padding: 0;
+	padding-top: 0.5em;
+}
+
+.played {
+	margin: 0;
+	padding: 0;
+	font-size: 0.7em;
+}
+
+.icon {
+    width: 25%;
+}
+
+.icon + span {
+    font-size: 1.1em;
+}
+
+.icon-circle-down {
+	display: inline;
+}
+
+.nav i {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+	margin-bottom: 0.1em;
+    padding: 0.4em;
+    border-radius: 50%;
+    font-size: 1.2em;
+    box-shadow: 0 0 0 0.8em transparent;
+    background: rgba(255, 255, 255, 0.1);
+}	
+
+.dropdown {
+	margin: 0;
+	padding: 0;
+	font-size: .5em;
+	display: none;
+	border-top: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.dropdown li {
+	display: inline-block;
+	width: 50%;
+}
+
+.dropbtn {
+	position: relative;
+}
+
+.dropdown span {
+	padding-left: 1em;
+}

@@ -47,45 +47,23 @@
         </nav>
     </body>
     <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript">
-        var create_course_slt = function () {
-            var course_slt = document.getElementById('course_select');
-			$.ajax({
-				type: "POST",
-				url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_courses.php",
-				crossDomain: true,
-				cache: false,
-				success: function (result) {
-					courses = result.split("\"").filter(n => n);
-					for(i = 0; i < courses.length; i++) {
-						var o = document.createElement('option');
-                    	o.text = courses[i];
-						o.value = courses[i];
-						course_slt.add(o);
-					}
-				}
-			});
-        };
-        
-        var clear_storage = function () {
-            for(i = 1; i <= 18; i++) {
-                localStorage.removeItem("Map"+i);
-                localStorage.removeItem("Scr"+i);
-            }
-        };
-        
-        $(document).ready(function() {
+	<script src="cordova.js"></script>
+    <script type="text/javascript">   	
+        document.addEventListener("deviceready", onDeviceReady, false);
+		var db = window.openDatabase("GolfDB", "1.0", "Golf App Database", 65536);
+		
+		function onDeviceReady () {
+			createDB();
+			
 			if(localStorage.getItem("userID") !== null) {
-				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_name.php", { email: localStorage.getItem("userID")},
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_name.php", { email: localStorage.getItem("userID") },
 				function(result) {
 					document.getElementById('log_msg').style.display = "block";
 					document.getElementById('log_msg').innerHTML = "Logged in as: " + result;
-				});
-				
-				create_course_slt();       
+				});      
                 clear_storage();
                 
-                document.getElementById('prev_rounds_btn').href = "#";
+                document.getElementById('prev_rounds_btn').href = "prev_rounds.html";
                 document.getElementById('statistics_btn').href = "#";
                 document.getElementById('account_btn').href = "account_in.html";
 
@@ -95,19 +73,70 @@
                 };
                 
                 document.getElementById('course_select').onchange = function() {
-                    var course_slt = document.getElementById('course_select'),
-                        course = course_slt.options[course_slt.selectedIndex].value;
-                    $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_cid.php", { Course: course },  
-                    function(cid) {  
-                        $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_typ.php", { CID: cid },
-                        function(typ) {
-                            window.location = "map.html?cid="+cid+"&hid=1&typ="+typ;
-                        });
-                    });  
+					db.transaction(get_course, error_call);
                 }; 
 			} else {
 				document.getElementById('play_golf_btn').href = "account_out.html";
 			}
-        });
+		};
+		
+		function createDB () {
+			db.transaction(create_table_courses, error_call, success_call_courses);
+		};
+		
+		function create_table_courses (tx) {
+			tx.executeSql('CREATE TABLE IF NOT EXISTS courses (CID int NOT NULL, Course_Name VARCHAR(40) NOT NULL, TYP int NOT NULL)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (0, "Test", 0)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (1, "Torrance House", 0)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (2, "Langlands", 0)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (3, "Irvine Bogside", 0)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (4, "Hollandbush", 0)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (5, "Larkhall", 1)');
+			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (6, "Strathclyde", 1)');
+		};
+		
+		function error_call (err) {
+			alert("Error processing query: " + err.code);
+		};
+		
+		function success_call_courses () {
+			db.transaction(query_courses, error_call);
+		};
+		
+		function query_courses (tx) {
+			tx.executeSql('SELECT DISTINCT * FROM courses',[], fill_courses, error_call);
+		};
+		
+		function fill_courses (tx, result) {
+			var course_slt = document.getElementById('course_select');
+			for(i = 0; i < result.rows.length; i++) {
+				var row = result.rows.item(i);
+				var o = document.createElement('option');
+                o.text = row['Course_Name'];
+				o.value = row['Course_Name'];
+				course_slt.add(o);
+			};
+		};
+		
+		function get_course (tx) {
+			var course_slt = document.getElementById('course_select'),
+                course = course_slt.options[course_slt.selectedIndex].value;
+			tx.executeSql('SELECT DISTINCT * FROM courses WHERE Course_Name = "'+ course +'"', [], load_course, error_call);
+		};
+		
+		function load_course (tx, result) {
+			for(i = 0; i < result.rows.length; i++) {
+				var row = result.rows.item(i);
+				window.location = "map.html?cid="+row['CID']+"&hid=1&typ="+row['TYP'];
+			}
+		};
+		
+		var clear_storage = function () {
+            for(i = 1; i <= 18; i++) {
+                localStorage.removeItem("Map"+i);
+                localStorage.removeItem("Scr"+i);
+            }
+			localStorage.removeItem("RID");
+        };
     </script>
 </html>

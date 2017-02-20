@@ -1,35 +1,41 @@
 @font-face {
-    font-family: 'icomoon';
-    src:  url('fonts/map/icomoon.eot?gfrc43');
-    src:  url('fonts/map/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
-          url('fonts/map/icomoon.ttf?gfrc43') format('truetype'),
-          url('fonts/map/icomoon.woff?gfrc43') format('woff'),
-          url('fonts/map/icomoon.svg?gfrc43#icomoon') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'icomoon';
+  src:  url('fonts/map/icomoon.eot?1bqn53');
+  src:  url('fonts/map/icomoon.eot?1bqn53#iefix') format('embedded-opentype'),
+    	url('fonts/map/icomoon.ttf?1bqn53') format('truetype'),
+    	url('fonts/map/icomoon.woff?1bqn53') format('woff'),
+    	url('fonts/map/icomoon.svg?1bqn53#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-    font-family: 'icomoon' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 }
 
-.icon-compass:before {
-    content: "\e949";
+.icon-home:before {
+  content: "\e900";
+}
+.icon-list-numbered:before {
+  content: "\e9b9";
 }
 .icon-menu:before {
-    content: "\e9bd";
+  content: "\e9bd";
+}
+.icon-last:before {
+  content: "\ea22";
 }
 .icon-arrow-right:before {
-    content: "\ea34";
+  content: "\ea34";
 }
 .icon-arrow-left:before {
-    content: "\ea38";
+  content: "\ea38";
 }
 
 /* Global Styles */
@@ -46,12 +52,7 @@ html, body {
 #map {
     z-index: 1;
     font-size: 1em;
-    height: 34.6em; 
-}
-            
-.nav {
-	margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    height: 32em;
 }
             
 ul {
@@ -94,36 +95,7 @@ li a {
     font-size: .8em;
     -webkit-appearance: none;
     appearance: none;
-}
-
-.hole_info {
-    z-index: 2;
-    position: absolute;
-	width: 15%;
-    margin-top: 23em;
-    margin-left: 17.8em;
-    color: rgba(0, 0, 0, 50);
-    text-shadow: 1px 1px white;
-    border-right: 2px solid black;
-}
-            
-.heading {
-    float: right;
-    font-size: 1em;
-    margin-right: .2em;
-    margin-bottom: -0.5em;
-}
-            
-.info {
-    float: right;
-    margin-right: .1em;
-    padding-top: .1em;
-    font-size: 1.5em;
-}
-            
-tr {
-    border-bottom: 2px solid black;
-}
+}          
             
 .err_msg {
     display: none;
@@ -131,12 +103,75 @@ tr {
     position: absolute;
     width: 56%;
     overflow: hidden;
-    margin-top: 0;
-    margin-left: 20%;
+    margin-top: -22.7%;
+    margin-left: 19.8%;
     padding-top: .5em;
     padding-bottom: .5em;
     font-size: 1.5em;
     text-align: center;
     background-color: rgb(23, 207, 69);
     color: white;
+}
+
+.dropdown_menu {
+	display: none;
+	z-index: 2;
+    position: absolute;
+	margin: 0;
+	padding: 0.5em;
+	width: 91%;
+	background-color: rgba(23, 207, 69, 0.85);
+}	
+.dropdown_menu input {
+	width: 100%;
+	margin-top: 0.4em;
+	padding: 0.375em;
+	color: white;
+	background-color: rgb(25, 230, 77);
+	font-size: 1.5em;
+	border: 1px solid white;
+	-webkit-appearance: none;
+}
+			
+.hole_list {
+	display: none;
+	z-index: 2;
+	width: 86.7%;
+	height: 80.2%;
+	padding-left: 2em;
+    position: absolute;
+	border-collapse: separate;
+    border-spacing: 0.6em;
+	background-color: rgba(23, 207, 69, 0.85);
+}
+.hole_list_num {
+	width: 100%;
+	padding: .25em;
+	padding-top: 0;
+	padding-bottom: 0;
+	color: white;
+	background-color: rgb(25, 230, 77);
+	font-size: 3em;
+	border: 1px solid white;
+	-webkit-appearance: none;
+}
+
+.hole_info {
+	display: none;
+	z-index: 2;
+	position: absolute;
+	width: 89%;
+	height: 80.2%;
+	padding-left: 1em;
+	border-collapse: separate;
+	border-spacing: 0.6em;
+	background-color: rgba(23, 207, 69, 0.85);
+	color: white;
+	font-size: 1.5em;
+}
+.hole_info_th {
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
 }
