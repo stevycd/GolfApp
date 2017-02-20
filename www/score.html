@@ -32,18 +32,24 @@
                 line-height: 1;
             }
 
-            .icon-compass:before {
-                content: "\e949";
-            }
-            .icon-menu:before {
-                content: "\e9bd";
-            }
-            .icon-arrow-right:before {
-                content: "\ea34";
-            }
-            .icon-arrow-left:before {
-                content: "\ea38";
-            }
+            .icon-home:before {
+			  content: "\e900";
+			}
+			.icon-list-numbered:before {
+			  content: "\e9b9";
+			}
+			.icon-menu:before {
+			  content: "\e9bd";
+			}
+			.icon-last:before {
+			  content: "\ea22";
+			}
+			.icon-arrow-right:before {
+			  content: "\ea34";
+			}
+			.icon-arrow-left:before {
+			  content: "\ea38";
+			}
             
             /* Global Styles */
             html * {
@@ -51,10 +57,12 @@
                 background-repeat: no-repeat;
                 background-size: cover;
             }            
-            
-            .nav {
-                margin-bottom: 2em;
-            }
+			
+			#bottom_nav {
+				position: fixed;
+    			bottom: .8em;
+				width: 95.5%;
+			}
             
             ul {
                 margin: 0;
@@ -86,11 +94,6 @@
                 border-right: 1px solid white;
             }
             
-            #hole_num {
-                float: left;
-                padding-left: 1em;
-            }
-            
             .heading {
                 background: rgba(23, 207, 69, 0.85);
                 color: rgba(249, 249, 249, 0.9);
@@ -110,29 +113,82 @@
                 padding-top: 0.4em;
                 padding-bottom: 0.4em;
             }
+			
+			.score_table {
+				width: 100%;
+				padding: 0;
+				margin: 0;
+				margin-top: 3em;
+			}
+			
+			.dropdown_menu {
+				display: none;
+				z-index: 2;
+    			position: absolute;
+				margin: 0;
+				padding: 0.5em;
+				width: 91%;
+				background-color: rgba(23, 207, 69, 0.85);
+			}	
+			.dropdown_menu input {
+				width: 100%;
+				margin-top: 0.4em;
+				padding: 0.375em;
+				color: white;
+				background-color: rgb(25, 230, 77);
+				font-size: 1.5em;
+				border: 1px solid white;
+				-webkit-appearance: none;
+			}
+			
+			.hole_list {
+				display: none;
+				z-index: 2;
+				width: 86.7%;
+				height: 80.2%;
+				padding-left: 2em;
+    			position: absolute;
+				border-collapse: separate;
+    			border-spacing: 0.6em;
+				background-color: rgba(23, 207, 69, 0.85);
+			}
+			.hole_list_num {
+				width: 100%;
+				padding: .25em;
+				padding-top: 0;
+				padding-bottom: 0;
+				color: white;
+				background-color: rgb(25, 230, 77);
+				font-size: 3em;
+				border: 1px solid white;
+				-webkit-appearance: none;
+			}
         </style>
     </head>
     <body background="img/background.jpg">
-        <nav class="nav">
+		<nav class="nav">
             <ul>
                 <li class="button">
-                    <a id="prev_hole_btn">
-                        <span class="icon"><i aria-hidden="true" class="icon-arrow-left"></i></span>
+                    <a id="menu_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-menu"></i></span>
                     </a>
                 </li>
-                <li class="title">
-                    <a>
-                        <span id="hole_num"></span><span id="hole_name"></span>
-                    </a>
-                </li>
+                <li class="title"><a id="hole_num"></a></li>
                 <li class="button">
-                    <a id="next_hole_btn">
-                        <span class="icon"><i aria-hidden="true" class="icon-arrow-right"></i></span>
+                    <a id="hole_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-list-numbered"></i></span>
                     </a>
                 </li>
             </ul>
         </nav>
-        <table style="width:100%">
+		<p class="dropdown_menu" id="dropdown_menu">
+			<input type="button" name="finish_round" id="finish_round_btn" value="Finish Round"></br>
+			<input type="button" name="home" id="home_btn" value="Home">
+		</p>
+		<table class="hole_list" id="hole_list">
+			<tbody></tbody>
+		</table>
+        <table class="score_table">
             <tr class="heading">
                 <td>Score</td>
                 <td>Putts</td> 
@@ -167,6 +223,23 @@
                 </td>
             </tr>           
         </table>
+		<nav class="nav" id="bottom_nav">
+            <ul>
+                <li class="button">
+                    <a id="prev_hole_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-arrow-left"></i></span>
+                    </a>
+                </li>
+                <li class="title">
+                    <a><span id="hole_name"></span></a>
+                </li>
+                <li class="button">
+                    <a id="next_hole_btn">
+                        <span class="icon"><i aria-hidden="true" class="icon-arrow-right"></i></span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </body>
 	<script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript">
@@ -291,6 +364,56 @@
 			}
 			return JSON.stringify(data);
 		};
+		
+		document.getElementById('menu_btn').onclick = function () {
+			document.getElementById('hole_list').style.display = "none";
+			var dropdown = document.getElementById('dropdown_menu');
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";	
+		};
+		
+		document.getElementById('hole_btn').onclick = function () {
+			document.getElementById('dropdown_menu').style.display = "none";
+			var table = document.getElementById('hole_list');
+            table.style.display = table.style.display === "block" ? "none" : "block";	
+		};
+		
+		document.getElementById('finish_round_btn').onclick = function () {
+			var num_holes = 18;
+            if(TYP) num_holes = 9;
+			save_hole_data();
+			window.location = "finish.html?cid="+CID+"&hid="+num_holes+"&typ="+TYP;	
+		};
+		
+		document.getElementById('home_btn').onclick = function () {
+			var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
+            if(confirmed) {
+            	window.location = "index.html";
+            }
+		};
+		
+		function fill_holes_dropdown() {
+			var num_holes = 18;
+            if(TYP) { 
+				num_holes = 9;
+				$('#hole_list').css('border-spacing', "1.8em");
+			}
+			for(i = 1; i <= (num_holes/3); i++) {
+				$('#hole_list tbody').append('<tr id="tr'+i+'">');
+				for(j = 2; j >= 0; j--) {
+					var num = ((i*3)-j);
+					$('#hole_list tbody').append('<td><input type="button" class="hole_list_num" id="hole_num_btn'+num+'" value="'+num+'"></td>');
+					set_hole_event_handler(num);
+				}
+				$('#hole_list tbody').append('</tr>');
+			}
+		};
+		
+		function set_hole_event_handler (index) {
+			document.getElementById('hole_num_btn'+index+'').onclick = function () {	
+				save_hole_data();
+				window.location = "map.html?cid="+CID+"&hid="+index+"&typ="+TYP;
+        	};
+		};
         
         window.addEventListener("orientationchange", function() {
             save_hole_data();
@@ -300,14 +423,14 @@
         window.onload = function () {
 			$.ajax({
 				type: "POST",
-				url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_hole_data.php",
+				url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_hole_data.php",
 				data: { CID: CID, HID: HID },
 				crossDomain: true,
 				cache: false,
 				success: function (result) {
 					row = JSON.parse(result);
 					
-					document.getElementById('hole_num').innerHTML = HID; 
+					document.getElementById('hole_num').innerHTML = "Hole: " + HID; 
 					document.getElementById('hole_name').innerHTML = row['Hole_Name']; 
 					var scr = JSON.parse(localStorage.getItem("Scr"+HID));
 					if(scr !== null) 
@@ -315,6 +438,7 @@
 					else 
 						document.getElementById('tee').value = "1W";
 
+					fill_holes_dropdown();
 					create_score_slt();
 					create_putts_slt();
 				}

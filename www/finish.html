@@ -220,7 +220,7 @@
 		};
         
         var add_course_name = function () {
-			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_course_data.php", { CID: CID },
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_course_data.php", { CID: CID },
 			function(result) {
 				var row = JSON.parse(result);
             	document.getElementById('course_name').innerHTML = row['Course_Name'];
@@ -228,7 +228,7 @@
         };
           
         var fill_table = function () {
-            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_pars.php", { CID: CID },
+            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_pars.php", { CID: CID },
 			function(result) {
                 var pars = result,
                     num_holes = 18;
@@ -264,27 +264,37 @@
 			var data = [];
 			for(i = 1; i <= num_holes; i++) {
 				data.push(localStorage.getItem("Map"+i));
+			}
+			for(i = 1; i <= num_holes; i++) {
 				data.push(localStorage.getItem("Scr"+i));
 			}
 			return JSON.stringify(data);
 		};
         
         document.getElementById('prev_hole_btn').onclick = function() {
-            window.location =  "score.html?cid="+CID+"&hid="+HID+"&typ="+TYP; 
+            window.history.back();
         };
         
         document.getElementById('save_round_btn').onclick = function () {
             var num_holes = 18;
             if(TYP) num_holes = 9;
-            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/push_round_data.php", {
-				Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes)
-			}, function() {
-				window.location = "index.html";
-			});  
+			if(localStorage.getItem("RID") === null) {
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/push_round_data.php", {
+					Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes)
+				}, function() {
+					window.location = "index.html";
+				});  
+			} else {
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/update_round.php", {
+					Email: localStorage.getItem('userID'), RID: localStorage.getItem("RID"), Data: get_round_data(num_holes)
+				}, function() {
+					window.location = "index.html";
+				});
+			}
         };
         
         document.getElementById('discard_btn').onclick = function () {
-            var confirmed = confirm("Are you sure you don't want to save your round?");
+            var confirmed = confirm("Are you sure you don't want to save your round/changes?");
             if(confirmed) {
                 window.location = "index.html";
             }

@@ -170,7 +170,7 @@
             pars;
         
         var add_course_name = function () {
-			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_course_data.php", { CID: CID },
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_course_data.php", { CID: CID },
 			function(result) {
 				var row = JSON.parse(result);
             	document.getElementById('course_name').innerHTML = row['Course_Name'];
@@ -178,7 +178,7 @@
         };
         
         var fill_table = function () {
-            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/www/php/get_pars.php", { CID: CID },
+            $.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_pars.php", { CID: CID },
 			function(result) {
                 pars = result;
                 add_row_par(tbody_out, 0);
