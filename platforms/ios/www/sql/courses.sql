@@ -1,7 +1,0 @@
-CREATE TABLE courses
-(
-CID int NOT NULL,
-Course_Name VARCHAR(40) NOT NULL,
-TYP int NOT NULL
-);
-

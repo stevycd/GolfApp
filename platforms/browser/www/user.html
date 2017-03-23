@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
+		<link rel="stylesheet" href="css/user.css"/> 
+        <title>Golf App: User</title>
+    </head>
+    <body background="img/background.jpg">
+		<h1 align="center" id="users_name"></h1>
+		<nav class="nav">
+            <ul id="nav">
+                <li class="home">
+                    <a href="social.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-users"></i></span><span>Social</span>
+                    </a>
+                </li>
+				<h2 align="left" id="rounds_title">Rounds:</h2>
+			</ul>
+		</nav>
+	</body>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="cordova.js"></script>
+    <script type="text/javascript">  
+		document.addEventListener("deviceready", onDeviceReady, false);
+		var db = window.openDatabase("GolfDB", "1.0", "Golf App Database", 65536);
+		var selected_course, CID, TYP, g_index;
+		
+		var UID = parseInt($_GET('uid'));
+		function $_GET(param) {
+			var vars = {};
+			window.location.href.replace(location.hash, '').replace( /[?&]+([^=&]+)=?([^&]*)?/gi,
+				function(m, key, value) {
+					vars[key] = value !== undefined ? value : '';
+				}
+			);
+			if (param) {
+				return vars[param] ? vars[param] : null;	
+			}
+			return vars;
+		};
+		
+		function onDeviceReady () {
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_users.php", { search: '' },
+			function(result) {
+				if(result != "error") {
+					rows = JSON.parse(result);
+					for(i = rows.length-1; i >= 0 ; i--) {
+						if(rows[i]['UserID'] == UID) { 
+							document.getElementById('users_name').innerHTML = rows[i]['FullName'];
+							get_rounds(rows[i]['Email']);
+						}
+					}	
+				}
+			});
+		};
+		
+		function get_rounds(email) {
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_rounds.php", { email: email },
+			function(result) {
+				if(result != "error") {
+					rows = JSON.parse(result);
+					for(i = rows.length-1; i >= 0 ; i--) {
+						if(rows[i]['Private'] == 0) {
+							$('ul#nav').append('<li class="round" id="round'+i+'"><a id="round_info'+i+'"><span class="icon"><i aria-hidden="true" class="icon-circle-down"></i></span><span><p class="course_name">'+rows[i]['CourseName']+'</p><p class="played">'+rows[i]['Played']+'</p></span></a></li>');
+							$('#round'+i+'').append('<nav class="dropdown" id="dropdown'+i+'"><ul><li><a class="dropbtn" id="view'+i+'"><span class="icon"><i aria-hidden="true" class="icon-play2"></i></span><span>View</span></a></li></ul></nav>');		
+
+							set_view_event_handler(i, rows[i]['CourseName']);
+							set_round_event_handler(i);
+						}
+					}
+				} else {
+					document.getElementById('rounds_title').innerHTML = "There are no saved rounds";
+				}
+			});
+		}
+		
+		function set_round_event_handler (index) {
+			document.getElementById('round_info'+index+'').onclick = function () {	
+				var dropdown = document.getElementById("dropdown"+index);
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        	};
+		};
+		
+		function set_view_event_handler (index, Course_Name) {		
+			document.getElementById('view'+index+'').onclick = function () {	
+				localStorage.setItem("RID", rows[index]['RoundID']);
+				localStorage.setItem("Owner", "false");
+				
+				selected_course = Course_Name;
+				g_index = index;
+				db.transaction(get_course, error_call);			
+        	};
+		};
+		
+		function get_course (tx) {
+			tx.executeSql('SELECT DISTINCT * FROM courses WHERE CourseName = "'+ selected_course +'"', [], set_details, error_call);
+		};
+		
+		function set_details (tx, result) {
+			for(i = 0; i < result.rows.length; i++) {
+				var row = result.rows.item(i);
+				CID = row['CourseID'];
+				TYP = row['TYP'];
+			}
+			fill_localStorage(g_index);
+			window.location = "map.html?cid="+CID+"&hid=1&typ="+TYP;
+		};
+		
+		function error_call (err) {
+			alert("Error processing query: " + err.code);
+		};
+		
+		function fill_localStorage (index) {
+			var data = JSON.parse(rows[index]['RoundData']);
+			var num_holes = 18;
+            if(TYP) num_holes = 9;
+			for(i = 0; i < num_holes; i++) {
+				localStorage.setItem("Map"+(i+1), data[i]);
+            }
+			for(i = num_holes; i < num_holes*2; i++) {
+				localStorage.setItem("Scr"+(i-num_holes+1), data[i]);
+            }
+		};
+	</script>
+</html>

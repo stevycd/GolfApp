@@ -1,7 +1,8 @@
 CREATE TABLE courses
 (
-CID int NOT NULL,
-Course_Name VARCHAR(40) NOT NULL,
-TYP int NOT NULL
+CourseID int UNSIGNED NOT NULL auto_increment,
+CourseName VARCHAR(40) NOT NULL UNIQUE,
+TYP int UNSIGNED NOT NULL,
+PRIMARY KEY(CourseID)
 );
 

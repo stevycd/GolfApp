@@ -5,165 +5,9 @@
         <meta charset="utf-8"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
-        <style>
-            @font-face {
-                font-family: 'icomoon';
-                src:  url('css/fonts/map/icomoon.eot?gfrc43');
-                src:  url('css/fonts/map/icomoon.eot?gfrc43#iefix') format('embedded-opentype'),
-                      url('css/fonts/map/icomoon.ttf?gfrc43') format('truetype'),
-                      url('css/fonts/map/icomoon.woff?gfrc43') format('woff'),
-                      url('css/fonts/map/icomoon.svg?gfrc43#icomoon') format('svg');
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            [class^="icon-"], [class*=" icon-"] {
-                font-family: 'icomoon' !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
-            }
-
-            .icon-home:before {
-			  content: "\e900";
-			}
-			.icon-list-numbered:before {
-			  content: "\e9b9";
-			}
-			.icon-menu:before {
-			  content: "\e9bd";
-			}
-			.icon-last:before {
-			  content: "\ea22";
-			}
-			.icon-arrow-right:before {
-			  content: "\ea34";
-			}
-			.icon-arrow-left:before {
-			  content: "\ea38";
-			}
-            
-            /* Global Styles */
-            html * {
-                font-family:  Tahoma, Geneva, sans-serif;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }            
-			
-			#bottom_nav {
-				position: fixed;
-    			bottom: .8em;
-				width: 95.5%;
-			}
-            
-            ul {
-                margin: 0;
-                padding: 0;
-                list-style-type: none;
-                overflow: hidden;
-                background-color: rgba(23, 207, 69, 0.85);
-            }
-
-            li {
-                width: 20%;
-                float: left;
-            }
-
-            li a {
-                display: block;
-                color: white;
-                padding: 0;
-                padding-top: .5em;
-                padding-bottom: .5em;
-                font-size: 1.5em;
-                text-align: center;
-                text-decoration: none;
-            }
-            
-            .title {
-                width: 59%;
-                border-left: 1px solid white;
-                border-right: 1px solid white;
-            }
-            
-            .heading {
-                background: rgba(23, 207, 69, 0.85);
-                color: rgba(249, 249, 249, 0.9);
-                border: 1px solid white;
-                font-size: 1.5em;
-                font-weight:normal;
-                text-align: center;
-            }
-            
-            select {
-                width: 100%;
-                font-size: 1.8em;
-				 -webkit-appearance: none;
-            }
-            
-            option {
-                padding-top: 0.4em;
-                padding-bottom: 0.4em;
-            }
-			
-			.score_table {
-				width: 100%;
-				padding: 0;
-				margin: 0;
-				margin-top: 3em;
-			}
-			
-			.dropdown_menu {
-				display: none;
-				z-index: 2;
-    			position: absolute;
-				margin: 0;
-				padding: 0.5em;
-				width: 91%;
-				background-color: rgba(23, 207, 69, 0.85);
-			}	
-			.dropdown_menu input {
-				width: 100%;
-				margin-top: 0.4em;
-				padding: 0.375em;
-				color: white;
-				background-color: rgb(25, 230, 77);
-				font-size: 1.5em;
-				border: 1px solid white;
-				-webkit-appearance: none;
-			}
-			
-			.hole_list {
-				display: none;
-				z-index: 2;
-				width: 86.7%;
-				height: 80.2%;
-				padding-left: 2em;
-    			position: absolute;
-				border-collapse: separate;
-    			border-spacing: 0.6em;
-				background-color: rgba(23, 207, 69, 0.85);
-			}
-			.hole_list_num {
-				width: 100%;
-				padding: .25em;
-				padding-top: 0;
-				padding-bottom: 0;
-				color: white;
-				background-color: rgb(25, 230, 77);
-				font-size: 3em;
-				border: 1px solid white;
-				-webkit-appearance: none;
-			}
-        </style>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
+		<link rel="stylesheet" href="css/score.css"/>
+		<title>Golf App: Score</title>
     </head>
     <body background="img/background.jpg">
 		<nav class="nav">
@@ -183,7 +27,7 @@
         </nav>
 		<p class="dropdown_menu" id="dropdown_menu">
 			<input type="button" name="finish_round" id="finish_round_btn" value="Finish Round"></br>
-			<input type="button" name="home" id="home_btn" value="Home">
+			<input type="button" name="home" id="home_btn" value="Go to Home">
 		</p>
 		<table class="hole_list" id="hole_list">
 			<tbody></tbody>
@@ -196,13 +40,13 @@
             </tr>
             <tr>
                 <td>
-                    <select id="score" size="5"></select>
+                    <select id="score" size="1"></select>
                 </td>
                 <td>
-                    <select id="putts" size="5"></select>
+                    <select id="putts" size="1"></select>
                 </td>
                 <td>
-                    <select id="tee" size="5">
+                    <select id="tee" size="1">
                         <option value="1W">1W</option>
                         <option value="3W">3W</option>
                         <option value="5W">5W</option>
@@ -221,7 +65,27 @@
                         <option value="Lw">Lw</option>
                     </select>
                 </td>
-            </tr>           
+            </tr>
+		</table>
+		<table class="score_table">
+			<tr class="heading">
+                <td>Fairway</td>
+                <td>Penalty</td> 
+            </tr>
+			<tr>
+                <td>
+                    <select id="fairway" size="1">
+						<option value="forward">Forward</option>
+						<option value="left">Left</option>
+						<option value="centre" selected>Centre</option>
+						<option value="right">Right</option>
+						<option value="back">Backward</option>
+					</select>
+                </td>
+                <td>
+                    <select id="penalty" size="1"></select>
+                </td>
+            </tr>   
         </table>
 		<nav class="nav" id="bottom_nav">
             <ul>
@@ -295,22 +159,35 @@
                 score_slt.add(o);
             }
             var scr = JSON.parse(localStorage.getItem("Scr"+HID));
-            if(scr !== null) 
+			var map = JSON.parse(localStorage.getItem("Map"+HID));
+
+			if(scr !== null) {
                 score_slt.value = scr.Score;
-            else 
+			}
+			else if (map.length > 0) {
+				score_slt.value = map.length+1;
+			}
+            else {
                 score_slt.value = par;
+			}
         };
         
         var create_putts_slt = function () {
             var putts_slt = document.getElementById('putts'),
                 score_slt = document.getElementById('score');
   
-            for(j = 0; j <= score_slt.selectedIndex ; j++) {
-                o = document.createElement('option');
-                o.text = j; o.value = j;
+			if(score_slt.selectedIndex === 0) {
+				o = document.createElement('option');
+                o.text = 0; o.value = 0;
                 putts_slt.add(o);
-            }
-            if(score_slt.selectedIndex === 0) 
+			} else { 
+				for(j = 0; j <= score_slt.selectedIndex-1 ; j++) {
+					o = document.createElement('option');
+					o.text = j; o.value = j;
+					putts_slt.add(o);
+				}
+			}
+            if(score_slt.selectedIndex <= 1) 
                 putts_slt.value = 0;
             else {
                 var scr = JSON.parse(localStorage.getItem("Scr"+HID));
@@ -320,34 +197,69 @@
                     putts_slt.value = 1;
             }
         };
+		
+		var create_penalty_slt = function () {
+			var penalty_slt = document.getElementById('penalty'),
+				putts_slt = document.getElementById('putts'),
+                score_slt = document.getElementById('score');
+			var amount = (score_slt.selectedIndex-putts_slt.selectedIndex);
+			if(amount <= 2) {
+				o = document.createElement('option');
+				o.text = 0; o.value = 0;
+				penalty_slt.add(o);
+			} else {
+				for(j = 0; j <= amount-2 ; j++) {
+					o = document.createElement('option');
+					o.text = j; o.value = j;
+					penalty_slt.add(o);
+				}
+			}
+		};
         
-        document.getElementById('score').onchange = function() {
-            var putts_slt = document.getElementById('putts');
-            for (i = putts_slt.options.length; i >= 0; i--) {
-                putts_slt.remove(i);
+		var reset_slt = function (slt) {
+			var select = document.getElementById(slt);
+            for (i = select.options.length; i >= 0; i--) {
+                select.remove(i);
             }
+		}
+		
+        document.getElementById('score').onchange = function() {
+			reset_slt("putts");
+			reset_slt("penalty");
+			
             create_putts_slt();
+			create_penalty_slt();
         };
+		
+		document.getElementById('putts').onchange = function () {
+			reset_slt("penalty");
+			
+			create_penalty_slt();
+		}
         
         document.getElementById('next_hole_btn').onclick = function() {
             save_hole_data();
             var num_holes = 18;
             if(TYP) num_holes = 9;
-            if(HID < num_holes) window.location =  "map.html?cid="+CID+"&hid="+(HID+1)+"&typ="+TYP;
-            else window.location = "finish.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+            if(HID < num_holes) { 
+				window.location = "map.html?cid="+CID+"&hid="+(HID+1)+"&typ="+TYP;
+			} else {
+				window.location = "finish.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+			}
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
 			save_hole_data();
-            if(HID >= 1) window.location =  "map.html?cid="+CID+"&hid="+HID+"&typ="+TYP; 
-            else window.location = "index.html"; 
+			window.location = "map.html?cid="+CID+"&hid="+HID+"&typ="+TYP; 
         };
 		
 		var save_hole_data = function () {
 			var score = {
                 Score: document.getElementById('score').value,
                 Putts: document.getElementById('putts').value,
-                Tee: document.getElementById('tee').value
+                Tee: document.getElementById('tee').value,
+				Fairway: document.getElementById('fairway').value,
+				Penalty: document.getElementById('penalty').value
             };
             if (typeof(Storage) !== "undefined") {
                 localStorage.setItem("Scr"+HID, JSON.stringify(score));
@@ -387,6 +299,7 @@
 		document.getElementById('home_btn').onclick = function () {
 			var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
             if(confirmed) {
+				localStorage.removeItem("Saved");
             	window.location = "index.html";
             }
 		};
@@ -419,8 +332,32 @@
             save_hole_data();
             window.location = "scorecard.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
         }, false);
+		
+		function set_tee_club () {
+			var tee = document.getElementById('tee');
+			var scr = JSON.parse(localStorage.getItem("Scr"+HID));
+			var map = JSON.parse(localStorage.getItem("Map"+HID));
+			
+			if(scr !== null) {
+				tee.value = scr.Tee;
+			} else {
+				if(map[0] != undefined || map[0] != null) {
+					if(map[0]['Club'] == null || map[0]['Club'] == undefined) {
+						tee.value = "1W";
+					} 
+					else {
+						tee.value = map[0]['Club'];
+					}
+				} else {
+					tee.value = "1W";
+				}
+			}
+		}
         
         window.onload = function () {
+			if(localStorage.getItem("RID") === null) {
+				localStorage.setItem("Saved", window.location.href);
+			}
 			$.ajax({
 				type: "POST",
 				url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_hole_data.php",
@@ -431,16 +368,19 @@
 					row = JSON.parse(result);
 					
 					document.getElementById('hole_num').innerHTML = "Hole: " + HID; 
-					document.getElementById('hole_name').innerHTML = row['Hole_Name']; 
-					var scr = JSON.parse(localStorage.getItem("Scr"+HID));
-					if(scr !== null) 
-						document.getElementById('tee').value = scr.Tee;
-					else 
-						document.getElementById('tee').value = "1W";
-
+					document.getElementById('hole_name').innerHTML = row['HoleName']; 
+					
+					set_tee_club();
 					fill_holes_dropdown();
 					create_score_slt();
 					create_putts_slt();
+					create_penalty_slt();
+					
+					var scr = JSON.parse(localStorage.getItem("Scr"+HID));
+					if(scr !== null) {
+						document.getElementById('fairway').value = scr.Fairway;
+						document.getElementById('penalty').value = scr.Penalty;
+					}
 				}
 			});
         };

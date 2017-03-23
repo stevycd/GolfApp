@@ -1,17 +1,24 @@
 {
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-geolocation": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-whitelist@1"
+            "id": "cordova-plugin-geolocation"
         },
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-geolocation": {
+    "cordova-plugin-sqlite": {
         "source": {
-            "type": "git",
-            "url": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-geolocation.git",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-sqlite"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
         },
         "is_top_level": true,
         "variables": {}
@@ -21,7 +28,7 @@
             "type": "registry",
             "id": "cordova-plugin-compat"
         },
-        "is_top_level": false,
+        "is_top_level": true,
         "variables": {}
     }
 }

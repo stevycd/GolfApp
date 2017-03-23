@@ -1,0 +1,200 @@
+/* Icon Styles */
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/social/icomoon.eot?aumwpt');
+  src:  url('fonts/social/icomoon.eot?aumwpt#iefix') format('embedded-opentype'),
+    	url('fonts/social/icomoon.ttf?aumwpt') format('truetype'),
+    	url('fonts/social/icomoon.woff?aumwpt') format('woff'),
+	  	url('fonts/social/icomoon.svg?aumwpt#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+
+.icon-home:before {
+  content: "\e900";
+}
+.icon-star-empty:before {
+  content: "\e9d7";
+}
+.icon-star-full:before {
+  content: "\e9d9";
+}
+.icon-circle-right:before {
+  content: "\ea42";
+}
+
+html, body {
+	height: 100%;
+}
+
+/* Global Styles */
+html * {
+	font-family:  Tahoma, Geneva, sans-serif;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+h1 {
+	font-size: 2.5em;
+	padding: 0;
+	padding-top: 0.5em;
+	margin: 0;
+	margin-bottom: 0.5em;
+	color: rgb(249, 249, 249);
+	text-shadow: 1px 1px #404040
+}
+
+.nav ul {
+	max-width: 1240px;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	list-style: none;
+	font-size: 1.5em;
+	font-weight: 300;
+}
+
+.nav li {
+	margin-top: 0.2em;
+}
+
+.nav li span {
+	display: inline-block;
+	height: 90%;
+}
+
+.nav a {
+	display: block;
+	color: rgba(249, 249, 249, 0.9);
+	text-decoration: none;
+	padding: 0.3em;
+}
+
+.home {
+	background: rgba(25, 230, 77, 0.85);
+}
+
+.icon {
+	width: 25%;
+}
+
+.icon + span {
+	font-size: 1.1em;
+}
+
+.icon-circle-down {
+	display: inline;
+}
+
+.nav i {
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+	margin-bottom: 0.1em;
+	padding: 0.4em;
+	border-radius: 50%;
+	font-size: 1.2em;
+	box-shadow: 0 0 0 0.8em transparent;
+	background: rgba(255, 255, 255, 0.1);
+}	
+
+/* Style the tab */
+div.tab {
+	margin-top: 0.5em;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: rgba(25, 230, 77, 0.85);
+}
+
+/* Style the links inside the tab */
+div.tab a {
+	float: left;
+	display: inline;
+	color: white;
+	text-align: center;
+	padding: 0;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	text-decoration: none;
+	transition: 0.3s;
+	font-size: 1.2em;
+	width: 32.8%;
+	margin: 0;
+	overflow: hidden;
+}
+
+#tab_followers {
+	border-left: 2px solid rgba(255, 255, 255, 0.5);
+	border-right: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Create an active/current tablink class */
+div.tab a:focus, .active {
+	background: rgba(20, 184, 61, 0.85);
+}
+
+/* Style the tab content */
+.tabcontent {
+	display: none;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-top: none;
+	background-color: rgba(241, 241, 241, 0.85);
+	max-height: 62.5%;
+	overflow: scroll;
+}
+
+input[type=text] {
+	width: 100%;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	font-size: 1em;
+	padding: 0.5em 1em 0.5em 1em;
+	-webkit-transition: width 0.4s ease-in-out;
+	transition: width 0.4s ease-in-out;
+}
+
+.user_list ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	list-style: none;
+	font-size: 1.2em;
+	font-weight: 300;
+}
+
+.user {
+	width: 88%;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	padding: 0.5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	background-color: rgba(25, 230, 77, 0.85);
+	color: white;
+}
+
+.user_icon {
+	float: right;
+	font-size: 1.2em;
+}
+
+.user_dropdown {
+	margin: 0;
+	padding: 0;
+	padding-top: 1em;
+}

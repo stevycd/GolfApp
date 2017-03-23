@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
+		<link rel="stylesheet" href="css/social.css"/> 
+        <title>Golf App: Social</title>
+    </head>
+    <body background="img/background.jpg">
+		<h1 align="center">Social</h1>
+		<nav class="nav">
+			<ul id="nav">
+				<li class="home">
+					<a href="index.html">
+						<span class="icon"><i aria-hidden="true" class="icon-home"></i></span><span>Home</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="tab">
+			<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Following')" id="tab_following">Following</a>
+			<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Followers')" id="tab_followers">Followers</a>
+			<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Find_Users')" id="tab_find_users">Find Users</a>
+		</div>
+
+		<div id="Following" class="tabcontent">
+			<p id="following_display_msg" style="display: none; font-size: 1.1em;">You are following no users</p> 
+			<nav class="user_list">
+				<ul id="following_list"></ul>
+			</nav>
+		</div>
+
+		<div id="Followers" class="tabcontent">
+			<p id="followers_display_msg" style="display: none; font-size: 1.1em;">No users are following you</p>
+			<nav class="user_list">
+				<ul id="followers_list"></ul>
+			</nav>
+		</div>
+
+		<div id="Find_Users" class="tabcontent">
+			<input type="text" id="search_input" placeholder="Search.." onchange="search(this.value)" value="">
+			<p id="search_err_msg" style="display: none; font-size: 1.1em;">Your search matches no users</p>
+			<nav class="user_list">
+				<ul id="user_list"></ul>
+			</nav>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="cordova.js"></script>
+    <script type="text/javascript">  
+		document.addEventListener("deviceready", onDeviceReady, false);
+		var db = window.openDatabase("GolfDB", "1.0", "Golf App Database", 65536);
+		var following = [], followers = [];
+		
+		function openTab(e, tabId) {
+			$('ul#following_list').empty();
+			$('ul#followers_list').empty();
+			$('ul#user_list').empty();
+			document.getElementById('search_input').value = "";
+			
+			var i, tabcontent, tablinks;
+			
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			if(tabId === 'Following') fill_following();
+			else if (tabId === 'Followers') fill_followers();
+			document.getElementById(tabId).style.display = "block";
+			e.currentTarget.className += " active";
+		};
+		
+		function search(val) {
+			$('ul#user_list').empty();
+			if(val != "" || val != null) {
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_users.php", { search: val },
+				function(result) {
+					if(result != "error") {
+						rows = JSON.parse(result);
+						for(i = rows.length-1; i >= 0 ; i--) {
+							if(rows[i]['Email'] !== localStorage.getItem("userID")) {
+								var is_following = $.inArray(rows[i]['Email'], following) !== -1;
+								var star_type = "icon-star-empty";
+								if(is_following) star_type = "icon-star-full";
+								
+								$('ul#user_list').append('<li class="user" id="user'+i+'"><a id="user_info'+i+'"><span>'+rows[i]['FullName']+'</span><span class="user_icon" id="follow_icon'+i+'"><i id="icon'+i+'" aria-hidden="true" class="'+star_type+'"></i></span></a></li>');
+								$('#user'+i+'').append('<p class="user_dropdown"><span>'+rows[i]['Email']+'</span><span class="user_icon" id="user_icon'+i+'"><i id="icon'+i+'" aria-hidden="true" class="icon-circle-right"></i></span></p>');
+								
+								set_user_event_handler(i, rows[i]['UserID']);
+								if(is_following) {
+									set_unfollow_event_handler (i, rows[i]['Email']) 
+								} else {
+									set_follow_event_handler(i, rows[i]['Email']);
+								}
+							}
+						}
+						document.getElementById('search_err_msg').style.display = "none";
+					} else {
+						document.getElementById('search_err_msg').style.display = "block";
+					}
+				});
+			}
+		};
+		
+		function set_user_event_handler (index, UID) {
+			document.getElementById('user_icon'+index+'').onclick = function () {	
+				window.location = "user.html?uid="+UID;
+        	};
+		};
+		
+		function set_follow_event_handler (index, user) {
+			document.getElementById('follow_icon'+index+'').onclick = function () {	
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/add_follow.php", { email: localStorage.getItem("userID"), follow: user },
+				function(result) {
+					document.getElementById('icon'+index+'').className = "icon-star-full";
+					set_unfollow_event_handler(index, user);
+				});
+        	};
+		};
+		
+		function set_unfollow_event_handler (index, user) {
+			document.getElementById('follow_icon'+index+'').onclick = function () {	
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/remove_follow.php", { email: localStorage.getItem("userID"), follow: user },
+				function(result) {
+					document.getElementById('icon'+index+'').className = "icon-star-empty";
+					set_follow_event_handler(index, user);
+				});
+        	};
+		};
+		
+		function fill_following() {
+			var has_following = false;
+			get_following();
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_users.php", { search: '' },
+			function(result) {
+				if(result != "error") {
+					rows = JSON.parse(result);
+					for(i = rows.length-1; i >= 0 ; i--) {
+						if(rows[i]['Email'] !== localStorage.getItem("userID")) {
+							var is_following = $.inArray(rows[i]['Email'], following) !== -1;
+							if(is_following) {
+								has_following = true;
+								
+								$('ul#following_list').append('<li class="user" id="user'+i+'"><a id="user_info'+i+'"><span>'+rows[i]['FullName']+'</span><span class="user_icon" id="follow_icon'+i+'"><i id="icon'+i+'" aria-hidden="true" class="icon-star-full"></i></span></a></li>');
+								$('#user'+i+'').append('<p class="user_dropdown"><span>'+rows[i]['Email']+'</span><span class="user_icon" id="user_icon'+i+'"><i id="icon'+i+'" aria-hidden="true" class="icon-circle-right"></i></span></p>');
+
+								set_user_event_handler(i, rows[i]['UserID']);
+								set_unfollow_event_handler (i, rows[i]['Email']) 
+							}
+						}
+					}	
+				}
+				if(!has_following) {
+					document.getElementById('following_display_msg').style.display = "block";
+				} else {
+					document.getElementById('following_display_msg').style.display = "none";
+				}
+			});
+		};
+		
+		function fill_followers() {
+			var has_followers = false;
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_users.php", { search: '' },
+			function(result) {
+				if(result != "error") {
+					rows = JSON.parse(result);
+					for(i = rows.length-1; i >= 0 ; i--) {
+						if(rows[i]['Email'] !== localStorage.getItem("userID")) {
+							if(rows[i]['Following'] !== null) {
+								var temp_followers = rows[i]['Following'].split(',');
+								var is_follower = $.inArray(localStorage.getItem("userID"), temp_followers) !== -1;
+								if(is_follower) {
+									has_followers = true;
+									get_following();
+									var is_following = $.inArray(rows[i]['Email'], following) !== -1;
+									var star_type = "icon-star-empty";
+									if(is_following) star_type = "icon-star-full";
+
+									$('ul#followers_list').append('<li class="user" id="user'+i+'"><a id="user_info'+i+'"><span>'+rows[i]['FullName']+'</span><span class="user_icon" id="follow_icon'+i+'"><i id="icon'+i+'" aria-hidden="true" class="'+star_type+'"></i></span></a></li>');
+									$('#user'+i+'').append('<p class="user_dropdown"><span>'+rows[i]['Email']+'</span><span class="user_icon" id="user_icon'+i+'"><i id="icon'+i+'" aria-hidden="true" class="icon-circle-right"></i></span></p>');
+
+									set_user_event_handler(i, rows[i]['UserID']);
+									if(is_following) {
+										set_unfollow_event_handler (i, rows[i]['Email']) 
+									} else {
+										set_follow_event_handler(i, rows[i]['Email']);
+									}
+								}
+							}
+						}
+					}	
+				}
+				if(!has_followers) {
+					document.getElementById('followers_display_msg').style.display = "block";
+				} else {
+					document.getElementById('followers_display_msg').style.display = "none";
+				}
+			});
+		};
+		
+		function get_following() {
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_following.php", { email: localStorage.getItem("userID") },
+			function(result) {
+				if(result != "error") {
+					rows = JSON.parse(result);
+					if(rows['Following'] !== null) {
+						following = rows['Following'].split(',');
+					}
+				}
+			});
+		};
+		
+		function onDeviceReady () {
+			document.getElementById("tab_following").click();
+			get_following();
+		};
+	</script>
+</html>

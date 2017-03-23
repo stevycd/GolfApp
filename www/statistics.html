@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
+        <link rel="stylesheet" href="css/prev_rounds.css"/> 
+        <title>Golf App: Statistics</title>
+		<style>
+			p {
+				background: rgba(25, 230, 77, 0.85);
+				color: white;
+				padding: 0.5em;
+				margin: 0.5em 0 0.2em 0;
+				font-size: 1.2em;
+			}
+			table, th, td {
+				width: 100%;
+				background: white;
+				border-collapse: collapse;
+				font-size: 1em;
+				margin-bottom: 0.5em;
+				padding: 0;
+			}
+			th, td {
+				text-align: center;
+				border: 2px solid rgba(255, 255, 255, 0.2);
+			}
+			td {
+				border: 2px solid rgba(0, 0, 0, 0.1);
+				padding: 2em;
+			}
+			.title {
+				text-align: left;
+				padding-left: 0.5em; 
+				background: #17cf45;
+				color: white;
+			}
+		</style>
+    </head>
+    <body background="img/background.jpg">
+        <h1 align="center">Statistics</h1>
+		<nav class="nav">
+            <ul id="nav">
+                <li class="home">
+                    <a href="index.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-home"></i></span><span>Home</span>
+                    </a>
+                </li>
+				<li class="home">
+                    <a id="clubs_btn">
+                        <span>Clubs</span>
+                    </a>
+                </li>
+				<table class="club_list" id="club_list" style="display: none;">
+					<thead>
+						<tr>
+							<th class="title">Club</th>
+							<th class="title">Yards</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				<li class="home">
+                    <a id="scoring_btn">
+                        <span>Scoring</span>
+                    </a>
+                </li>
+				<table class="scoring_list" id="scoring_list" style="display: none;">
+					<tbody>
+						<tr>
+							<th class="title">Average Score (18)</th>	
+							<td id="average_score_18"></td>
+						</tr>
+						<tr>
+							<th class="title">Average Score (9)</th>	
+							<td id="average_score_9"></td>
+						</tr>
+						<tr>
+							<th class="title">Greens in Regulation</th>	
+							<td id="greens_in_regulation"></td>
+						</tr>
+					</tbody>
+				</table>
+				<li class="home">
+                    <a id="putting_btn">
+                       <span>Putting</span>
+                    </a>
+                </li>
+				<table class="putting_list" id="putting_list" style="display: none;">
+					<tbody>
+						<tr>
+							<th class="title">Average Putts (18)</th>	
+							<td id="average_putts_18"></td>
+						</tr>
+						<tr>
+							<th class="title">Average Putts (9)</th>	
+							<td id="average_putts_9"></td>
+						</tr>
+					</tbody>
+				</table>
+				<li class="home">
+                    <a id="driving_btn">
+                        </span><span>Driving</span>
+                    </a>
+                </li>
+				<table class="driving_list" id="driving_list" style="display: none;">
+					<tbody>
+						<tr>
+							<th class="title">Fairway Hit</th>	
+							<td id="fairway_hit"></td>
+						</tr>
+						<tr>
+							<th class="title">Fairway Right</th>	
+							<td id="fairway_right"></td>
+						</tr>
+						<tr>
+							<th class="title">Fairway Left</th>	
+							<td id="fairway_left"></td>
+						</tr>
+					</tbody>
+				</table>
+			</ul>
+		</nav>
+	</body>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="cordova.js"></script>
+    <script type="text/javascript">  
+		document.addEventListener("deviceready", onDeviceReady, false);
+		var db = window.openDatabase("GolfDB", "1.0", "Golf App Database", 65536);	
+		var GIR_arr = [], Score18_arr = [], Score9_arr = [], Putts18_arr = [], Putts9_arr = [], Fairway_arr = [];
+		var clubs = { C_1W : [], C_3W : [], C_5W : [], C_1Hy : [], C_2Hy : [], C_3i : [], C_4i : [], C_5i : [], C_6i : [], C_7i : [], C_8i : [], C_9i : [], C_Pw : [], C_Gw : [], C_Sw : [], C_Lw : [] };
+		
+		function error_call (err) {
+			alert("Error processing query: " + err.code);
+		};
+		
+		function get_pars (course, data, last) {
+			db.transaction(function (tx) {
+				tx.executeSql('SELECT DISTINCT * FROM courses WHERE CourseName = "'+ course +'"', [], 
+					function (tx, result) {
+						for(i = 0; i < result.rows.length; i++) {
+							var row = result.rows.item(i);
+							$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_pars.php", { CID: row['CourseID'] },
+							function(result) {
+								var pars = result;
+								var total_score = 0, total_putts = 0;						
+								
+								for(j = data.length/2; j < data.length; j++) {
+									var data_obj = JSON.parse(data[j]);
+
+									if(data[j] != undefined && data_obj != null) {
+										total_score += parseInt(data_obj.Score);
+										var GIR = (data_obj.Score-data_obj.Putts) == (pars[(j-data.length/2)]-2);
+										GIR_arr.push(GIR);
+										
+										total_putts += parseInt(data_obj.Putts);
+										
+										Fairway_arr.push(data_obj.Fairway);
+									}
+								}
+								if(row['TYP'] == 0) { 
+									Score18_arr.push(total_score);
+									Putts18_arr.push(total_putts);
+								} else {
+									Score9_arr.push(total_score);
+									Putts9_arr.push(total_putts);
+								}				
+								
+								if(last) {
+									set_display();
+								}
+							});
+						}
+					});
+			}, error_call);	
+		};
+		
+		function set_display () {
+			document.getElementById('average_score_18').innerHTML = get_average(Score18_arr);
+			document.getElementById('average_score_9').innerHTML = get_average(Score9_arr);
+			document.getElementById('greens_in_regulation').innerHTML = get_percentage(GIR_arr, true)+"%";
+
+			document.getElementById('average_putts_18').innerHTML = get_average(Putts18_arr);
+			document.getElementById('average_putts_9').innerHTML = get_average(Putts9_arr);
+
+			document.getElementById('fairway_hit').innerHTML = get_percentage(Fairway_arr, "centre")+"%";
+			document.getElementById('fairway_right').innerHTML = get_percentage(Fairway_arr, "right")+"%";
+			document.getElementById('fairway_left').innerHTML = get_percentage(Fairway_arr, "left")+"%";
+		};
+		
+		var get_percentage = function (arr, match) {
+			if(arr.length > 0) {
+				var hit_count = 0;
+				for(i = 0; i < arr.length; i++) {
+					if(arr[i] == match) hit_count++;
+				}
+				return Math.round((hit_count/arr.length *100)*10)/10;
+			} 
+			return 0;
+		};
+		
+		var get_average = function (arr) {
+			var total = 0;
+			for(var i = 0; i < arr.length; i++) {
+				total += arr[i];
+			}
+			var average = Math.round((total / arr.length)*10)/10;
+			if(isNaN(average)) {
+				return 0;
+			} else {
+				return average;	  
+			}
+		};
+		
+		function get_club_distances (data) {		
+			for(j = 0; j < data.length/2; j++) {
+				var data_obj = JSON.parse(data[j]);
+				if(data_obj != null) {
+					for(shot = 0; shot < data_obj.length-1; shot++) {
+						clubs['C_'+data_obj[shot].Club+''].push(data_obj[shot].Dist);
+					}
+				}
+			}
+		};
+		
+		document.getElementById('clubs_btn').onclick = function () {
+			var table = document.getElementById('club_list');
+            table.style.display = table.style.display === "block" ? "none" : "block";
+		};
+		
+		document.getElementById('scoring_btn').onclick = function () {
+			var table = document.getElementById('scoring_list');
+            table.style.display = table.style.display === "block" ? "none" : "block";
+		};
+		
+		document.getElementById('putting_btn').onclick = function () {
+			var table = document.getElementById('putting_list');
+            table.style.display = table.style.display === "block" ? "none" : "block";
+		};
+		
+		document.getElementById('driving_btn').onclick = function () {
+			var table = document.getElementById('driving_list');
+            table.style.display = table.style.display === "block" ? "none" : "block";
+		};
+		
+		function onDeviceReady () {
+			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_rounds.php", { email: localStorage.getItem("userID") },
+			function(result) {
+				var last = false;
+				if(result != "error") {
+					rows = JSON.parse(result);
+					for(i = 0; i < rows.length ; i++) {
+						if(rows[i] != undefined) {
+							if(i === rows.length-1) last = true;
+							
+							var data = JSON.parse(rows[i]['RoundData']);
+							get_pars(rows[i]['CourseName'], data, last);
+							get_club_distances(data);
+						}
+					}
+					for(i = 0; i < Object.keys(clubs).length; i++) {
+						var key = Object.keys(clubs)[i];
+						$('#club_list tbody').append('<tr id="trtest">');
+							$('#club_list tbody').append('<th class="title">'+key.split('_').pop()+'</th>');
+							$('#club_list tbody').append('<td>'+get_average(clubs[key])+'</td>');
+						$('#club_list tbody').append('</tr>');
+					}
+				}
+			});
+		};
+	</script>
+</html>

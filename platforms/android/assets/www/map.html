@@ -5,14 +5,10 @@
         <meta charset="utf-8"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
 		<link rel="stylesheet" href="css/leaflet.css"/>
         <link rel="stylesheet" href="css/map.css"/> 
-        <script src="js/leaflet.js"></script>
+		<title>Golf App: Map</title>
     </head>
     <body background="img/background.jpg">     
 		<nav class="nav">
@@ -31,8 +27,10 @@
             </ul>
         </nav>
 		<p class="dropdown_menu" id="dropdown_menu">
+			<input type="button" name="edit_shots" id="edit_shots_btn" value="Edit Shots">
+			<input type="button" name="move_tee" id="move_tee_btn" value="Move Tee">
 			<input type="button" name="finish_round" id="finish_round_btn" value="Finish Round"></br>
-			<input type="button" name="home" id="home_btn" value="Home">
+			<input type="button" name="home" id="home_btn" value="Go to Home">
 		</p>
 		<table class="hole_info" id="hole_info">
 			<tbody>
@@ -53,10 +51,11 @@
 		<table class="hole_list" id="hole_list">
 			<tbody></tbody>
 		</table>
+		<button class="edit_btn" id="finish_editing_btn">Done Editing</button>
+		<p id="err_msg" class="err_msg"></p>
         <div id="container" style="position:relative;">
             <div id="map"></div>
         </div>
-		<p id="err_msg" class="err_msg"></p>
 		<nav class="nav">
             <ul>
                 <li class="button">
@@ -96,8 +95,9 @@
         </nav>
     </body>
 	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="js/leaflet.js"></script>
 	<script src="cordova.js"></script>
-    <script> 
+    <script type="text/javascript"> 
 		var CID = parseInt($_GET('cid')),
         	HID = parseInt($_GET('hid')),	
             TYP = parseInt($_GET('typ'));
@@ -114,6 +114,7 @@
 			return vars;
 		};
 		
+		var editing = false;
 		var shots = Array();
         var flagIcon = L.icon({
            iconUrl: 'img/flag.png',
@@ -122,7 +123,7 @@
            popupAnchor:  [3,-48]
         });
 		
-		var map,
+		var map, tee,
 			markers = Array(),
             lines = Array(),
             linesLayer = L.layerGroup(lines);
@@ -135,6 +136,7 @@
 				crossDomain: true,
 				cache: false,
 				success: function (result) {
+					var mapdata = JSON.parse(localStorage.getItem("Map"+HID));
 					map = L.map('map', { zoomControl:false });
 					
 					var row = JSON.parse(result);
@@ -144,11 +146,10 @@
 					cenLat = (parseFloat(holeLat)+parseFloat(teeLat))/2, cenLng = (parseFloat(holeLng)+parseFloat(teeLng))/2;
 
 					document.getElementById('hole_num').innerHTML = "Hole: " + HID;
-					document.getElementById('hole_info_name').innerHTML = row['Hole_Name'];
+					document.getElementById('hole_info_name').innerHTML = row['HoleName'];
 					document.getElementById('hole_info_yards').innerHTML = get_dist(new L.LatLng(teeLat, teeLng), new L.LatLng(holeLat, holeLng));
 					document.getElementById('hole_info_par').innerHTML = par;
 
-					// load a tile layer
 					var token = "pk.eyJ1Ijoic3RlcGhlbmR1bmRhcyIsImEiOiJjaXlhNzd1eTcwMDJmMndsdzNrNDc3a282In0.FI15WibAWtIOonIDt7J-FQ";
 					L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='+token, {
 						maxZoom: zoom,
@@ -165,18 +166,34 @@
 					map.keyboard.disable();
 
 					map.on('click', function(e) {
-						console.log("LAT: " + e.latlng.lat + " || LNG: " + e.latlng.lng);
-						var select = document.getElementById('club_select'),
-							club = select.options[select.selectedIndex].value;
-						add_marker(e.latlng.lat, e.latlng.lng, club);
+						if(editing) {
+							var select = document.getElementById('club_select'),
+								club = select.options[select.selectedIndex].value;
+							if(club == "") {
+								document.getElementById('err_msg').style.display = "block";
+								document.getElementById('err_msg').innerHTML = "No club is selected";
+								setTimeout(function () {document.getElementById('err_msg').style.display = "none";}, 3000);
+							} else {
+								add_marker(e.latlng.lat, e.latlng.lng, club);
+							}
+						}
 					});
+					
+					if(mapdata !== null) {
+						var prev_tee = mapdata[mapdata.length-1];
+						if(prev_tee !== null) {
+							if(!(prev_tee.lat == teeLat && prev_tee.lng == teeLng)) {
+								teeLat = prev_tee.lat;
+								teeLng = prev_tee.lng;
+							} 
+						}
+					}
 
 					add_tee(map, teeLat, teeLng);
 					add_hole(map, holeLat, holeLng);
 					
-					var mapdata = JSON.parse(localStorage.getItem("Map"+HID));
 					if(mapdata !== null) {
-						for(i = 0; i < mapdata.length; i++) {
+						for(i = 0; i < mapdata.length-1; i++) {
 							add_marker(mapdata[i].Lat, mapdata[i].Lng, mapdata[i].Club);
 						}
 					}
@@ -185,14 +202,14 @@
 		};
         
         var add_tee = function (map, teeLat, teeLng) {
-            teeMarker = L.marker(new L.LatLng(teeLat, teeLng), {clickable: true, draggable: true}).addTo(map);
-            markers.push(teeMarker.getLatLng()); 
+			teeMarker = L.marker(new L.LatLng(teeLat, teeLng), {clickable: false, draggable: false}).addTo(map);
+			tee = teeMarker;
+			markers.unshift(teeMarker.getLatLng()); 
         };  
         
         var add_hole = function (map, holeLat, holeLng) {
             holeMarker = L.marker(new L.LatLng(holeLat, holeLng), {icon: flagIcon, clickable: true}).addTo(map);
-            holeMarker.bindPopup("" + get_dist(markers[markers.length-1], holeMarker.getLatLng()));
-//            .openPopup()
+            holeMarker.bindPopup("" + get_dist(markers[markers.length-1], holeMarker.getLatLng())).openPopup();
             markers.push(holeMarker.getLatLng());
             lines = L.polyline(markers, {color: 'white'}).addTo(map);
         };
@@ -203,16 +220,17 @@
             if(map.getBounds().contains(LatLng)) {
                 newMarker = L.marker(LatLng, {draggable: true}).addTo(map);
                 var dist = get_dist(markers[markers.length-2], newMarker.getLatLng());
-                newMarker.bindPopup(dist + " ("+club+")");
+                newMarker.bindPopup(dist + " ("+club+")").openPopup();
                 
+				newMarker.on("click", marker_delete_onclick);
+				
                 shots.push({Lat: lat, Lng: lng, Club: club, Dist: dist});
                 
-                // Re-draw Polylines
                 map.removeLayer(lines);
                 markers.splice(markers.length-1,0,newMarker.getLatLng());
                 lines = L.polyline(markers, {color: 'white'});
                 lines.addTo(map);
-                // Update Hole Yardage
+
                 holeMarker._popup.setContent("" + get_dist(markers[markers.length-2], holeMarker.getLatLng()));
             } else {
                 document.getElementById('err_msg').style.display = "block";
@@ -220,39 +238,88 @@
 				setTimeout(function () {document.getElementById('err_msg').style.display = "none";}, 3000);
             }
         };
+		
+		var marker_delete_onclick = function () {
+			if(editing) {
+				var LatLng = this.getLatLng();
+				var index = markers.indexOf(LatLng);
+				for(i = 0; i < shots.length; i++) {
+					if(LatLng.lat == shots[i].Lat && LatLng.lng == shots[i].Lng) {
+						shots.splice(i, 1);
+					}
+				}
+				map.removeLayer(this);
+				
+				map.removeLayer(lines);
+				markers.splice(index, 1);
+				lines = L.polyline(markers, {color: 'white'});
+				lines.addTo(map);
+				
+				holeMarker._popup.setContent("" + get_dist(markers[markers.length-2], holeMarker.getLatLng()));
+			}
+		};
         
         var get_dist = function (from, to) {
             return Math.round((from.distanceTo(to)) * 1.09361);
         };
        
         document.getElementById('club_select').onchange = function() {
+			this.blur();
+			if(editing) return;
         	navigator.geolocation.getCurrentPosition(function(position) {
             	var select = document.getElementById('club_select'),
                     club = select.options[select.selectedIndex].value;
                 add_marker(position.coords.latitude, position.coords.longitude, club);
             }, onError, { enableHighAccuracy: true });
         };   
+		
+		document.getElementById('club_select').onclick = function() {
+			if(editing) return;
+        	navigator.geolocation.getCurrentPosition(function(position) {
+				console.log("Current position: " + position);
+            }, onError, { enableHighAccuracy: true });
+        }; 
            
         document.getElementById('next_hole_btn').onclick = function() {
+			if(editing) return;
             if (typeof(Storage) !== "undefined") {
+				shots.push(markers[0]);
                 localStorage.setItem("Map"+HID, JSON.stringify(shots));
             } else {
                 console.log("No Support for Local Storage");
             }
-            window.location = "score.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+			if(JSON.parse(localStorage.getItem('Owner') == "false")) {
+				var num_holes = 18;
+            	if(TYP) num_holes = 9;
+            	if(HID < num_holes) window.location =  "map.html?cid="+CID+"&hid="+(HID+1)+"&typ="+TYP;
+            	else window.location = "finish.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+			} else {
+            	window.location = "score.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
+			}
         };
         
         document.getElementById('prev_hole_btn').onclick = function() {
-            if(HID > 1) window.location =  "score.html?cid="+CID+"&hid="+(HID-1)+"&typ="+TYP; 
+			if(editing) return;
+            if(HID > 1) {
+				if(JSON.parse(localStorage.getItem('Owner') == "false")) {
+					window.location =  "map.html?cid="+CID+"&hid="+(HID-1)+"&typ="+TYP;
+				} else {
+					shots.push(markers[0]);
+                	localStorage.setItem("Map"+HID, JSON.stringify(shots));
+					window.location =  "score.html?cid="+CID+"&hid="+(HID-1)+"&typ="+TYP;
+				}
+			}  
             else {
                 var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
                 if(confirmed) {
-                    window.location = "index.html";
+					localStorage.removeItem("Saved");
+                	window.location = "index.html";
                 }
             } 
         };
 		
 		document.getElementById('menu_btn').onclick = function () {
+			if(editing) return;
 			document.getElementById('hole_info').style.display = "none";
 			document.getElementById('hole_list').style.display = "none";
 			var dropdown = document.getElementById('dropdown_menu');
@@ -260,6 +327,7 @@
 		};
 		
 		document.getElementById('hole_num').onclick = function () {
+			if(editing) return;
 			document.getElementById('dropdown_menu').style.display = "none";
 			document.getElementById('hole_list').style.display = "none";
 			var table = document.getElementById('hole_info');
@@ -267,16 +335,58 @@
 		};
 		
 		document.getElementById('hole_btn').onclick = function () {
+			if(editing) return;
 			document.getElementById('dropdown_menu').style.display = "none";
 			document.getElementById('hole_info').style.display = "none";
 			var table = document.getElementById('hole_list');
             table.style.display = table.style.display === "block" ? "none" : "block";	
 		};
 		
+		document.getElementById('edit_shots_btn').onclick = function () {
+			editing = true;
+			document.getElementById('dropdown_menu').style.display = "none";
+			document.getElementById('finish_editing_btn').style.display = "block";
+		};
+		
+		document.getElementById('move_tee_btn').onclick = function () {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				console.log("Tee moved to: " + position);
+			}, onError, { enableHighAccuracy: true });
+			
+			document.getElementById('dropdown_menu').style.display = "none";
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var teeLat = position.coords.latitude, teeLng = position.coords.longitude;
+				if(map.getBounds().contains(new L.LatLng(teeLat, teeLng))) {
+					map.removeLayer(tee);
+					map.removeLayer(lines);
+					markers.splice(0, 1);
+
+					add_tee(map, teeLat, teeLng);
+
+					lines = L.polyline(markers, {color: 'white'});
+					lines.addTo(map);
+
+					if(markers.length === 2) {
+						holeMarker._popup.setContent("" + get_dist(markers[markers.length-2], holeMarker.getLatLng()));
+					}
+				} else {
+					document.getElementById('err_msg').style.display = "block";
+                	document.getElementById('err_msg').innerHTML = "Not in Bounds ("+(Math.round(teeLat * 100) / 100)+", "+(Math.round(teeLng * 100) / 100)+")";
+					setTimeout(function () {document.getElementById('err_msg').style.display = "none";}, 3000);
+				}
+            }, onError, { enableHighAccuracy: true });
+		};
+		
+		document.getElementById('finish_editing_btn').onclick = function () {
+			editing = false;
+			document.getElementById('finish_editing_btn').style.display = "none";
+		};
+		
 		document.getElementById('finish_round_btn').onclick = function () {
 			var num_holes = 18;
             if(TYP) num_holes = 9;
 			if (typeof(Storage) !== "undefined") {
+				shots.push(markers[0]);
                 localStorage.setItem("Map"+HID, JSON.stringify(shots));
             } else {
                 console.log("No Support for Local Storage");
@@ -285,10 +395,15 @@
 		};
 		
 		document.getElementById('home_btn').onclick = function () {
-			var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
-            if(confirmed) {
-            	window.location = "index.html";
-            }
+			if(JSON.parse(localStorage.getItem('Owner') == "false")) {
+				window.location = "index.html";
+			} else {
+				var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
+				if(confirmed) {
+					localStorage.removeItem("Saved");
+					window.location = "index.html";
+				}
+			}
 		};
 		
 		function onError(err) {
@@ -316,6 +431,7 @@
 		function set_hole_event_handler (index) {
 			document.getElementById('hole_num_btn'+index+'').onclick = function () {	
 				if (typeof(Storage) !== "undefined") {
+					shots.push(markers[0]);
 					localStorage.setItem("Map"+HID, JSON.stringify(shots));
 				} else {
 					console.log("No Support for Local Storage");
@@ -325,11 +441,21 @@
 		};
 		
 		window.addEventListener("orientationchange", function() {
+			shots.push(markers[0]);
+            localStorage.setItem("Map"+HID, JSON.stringify(shots));
             window.location = "scorecard.html?cid="+CID+"&hid="+HID+"&typ="+TYP;
         }, false);
-		
+
         document.addEventListener("deviceready", onDeviceReady, false);
 		function onDeviceReady () {
+			if(JSON.parse(localStorage.getItem('Owner') == "false")) {
+				document.getElementById('club_select').style.visibility = "hidden";	
+				document.getElementById('edit_shots_btn').style.display = "none";	
+				document.getElementById('move_tee_btn').style.display = "none";
+			}
+			if(localStorage.getItem("RID") === null) {
+				localStorage.setItem("Saved", window.location.href);
+			}
 			fill_holes_dropdown();
 			get_course_data();
 		};

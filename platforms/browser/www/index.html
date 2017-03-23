@@ -5,11 +5,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
         <link rel="stylesheet" href="css/index.css"/> 
         <title>Golf App</title>
     </head>
@@ -37,6 +33,11 @@
                         <span class="icon"><i aria-hidden="true" class="icon-stats-dots"></i></span><span>Statistics</span>
                     </a>
                 </li>
+				<li class="social">
+                    <a id="social_btn" href="account_out.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-users"></i></span><span>Social</span>
+                    </a>
+                </li>
                 <li class="account">
                     <a id="account_btn" href="account_out.html">
                         <span class="icon"><i aria-hidden="true" class="icon-wrench"></i></span><span>Account</span>
@@ -53,6 +54,10 @@
 		var db = window.openDatabase("GolfDB", "1.0", "Golf App Database", 65536);
 		
 		function onDeviceReady () {
+			if(localStorage.getItem("Saved") !== null) {
+				window.location = localStorage.getItem("Saved");
+			}
+			
 			createDB();
 			
 			if(localStorage.getItem("userID") !== null) {
@@ -64,7 +69,8 @@
                 clear_storage();
                 
                 document.getElementById('prev_rounds_btn').href = "prev_rounds.html";
-                document.getElementById('statistics_btn').href = "#";
+                document.getElementById('statistics_btn').href = "statistics.html";
+				document.getElementById('social_btn').href = "social.html";
                 document.getElementById('account_btn').href = "account_in.html";
 
                 document.getElementById('play_golf_btn').onclick = function () {
@@ -85,14 +91,14 @@
 		};
 		
 		function create_table_courses (tx) {
-			tx.executeSql('CREATE TABLE IF NOT EXISTS courses (CID int NOT NULL, Course_Name VARCHAR(40) NOT NULL, TYP int NOT NULL)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (0, "Test", 0)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (1, "Torrance House", 0)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (2, "Langlands", 0)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (3, "Irvine Bogside", 0)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (4, "Hollandbush", 0)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (5, "Larkhall", 1)');
-			tx.executeSql('INSERT INTO courses (CID,Course_Name,TYP) VALUES (6, "Strathclyde", 1)');
+			tx.executeSql('CREATE TABLE IF NOT EXISTS courses (CourseID int UNSIGNED NOT NULL, CourseName VARCHAR(40) NOT NULL UNIQUE, TYP int NOT NULL)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (1, "Torrance House", 0)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (2, "Langlands", 0)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (3, "Irvine Bogside", 0)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (4, "Hollandbush", 0)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (5, "Larkhall", 1)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (6, "Strathclyde", 1)');
+			tx.executeSql('INSERT OR IGNORE INTO courses (CourseID,CourseName,TYP) VALUES (7, "Test", 0)');
 		};
 		
 		function error_call (err) {
@@ -112,8 +118,8 @@
 			for(i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
 				var o = document.createElement('option');
-                o.text = row['Course_Name'];
-				o.value = row['Course_Name'];
+                o.text = row['CourseName'];
+				o.value = row['CourseName'];
 				course_slt.add(o);
 			};
 		};
@@ -121,22 +127,26 @@
 		function get_course (tx) {
 			var course_slt = document.getElementById('course_select'),
                 course = course_slt.options[course_slt.selectedIndex].value;
-			tx.executeSql('SELECT DISTINCT * FROM courses WHERE Course_Name = "'+ course +'"', [], load_course, error_call);
+			tx.executeSql('SELECT DISTINCT * FROM courses WHERE CourseName = "'+ course +'"', [], load_course, error_call);
 		};
 		
 		function load_course (tx, result) {
-			for(i = 0; i < result.rows.length; i++) {
-				var row = result.rows.item(i);
-				window.location = "map.html?cid="+row['CID']+"&hid=1&typ="+row['TYP'];
-			}
+			var row = result.rows.item(0);
+			localStorage.setItem("Owner", "true");				
+
+			window.location = "map.html?cid="+row['CourseID']+"&hid=1&typ="+row['TYP'];
 		};
 		
 		var clear_storage = function () {
-            for(i = 1; i <= 18; i++) {
-                localStorage.removeItem("Map"+i);
-                localStorage.removeItem("Scr"+i);
-            }
+			if(localStorage.getItem("Saved") === null || localStorage.getItem("RID") !== null) {
+				for(i = 1; i <= 18; i++) {
+					localStorage.removeItem("Map"+i);
+					localStorage.removeItem("Scr"+i);
+				}
+				localStorage.removeItem("Owner");
+			}
 			localStorage.removeItem("RID");
+			localStorage.removeItem("Private");
         };
     </script>
 </html>

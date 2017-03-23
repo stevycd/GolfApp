@@ -5,152 +5,9 @@
         <meta charset="utf-8"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
-        <style>
-            @font-face {
-                font-family: 'icomoon';
-                src:  url('css/fonts/finish/icomoon.eot?7astdl');
-                src:  url('css/fonts/finish/icomoon.eot?7astdl#iefix') format('embedded-opentype'),
-                      url('css/fonts/finish/icomoon.ttf?7astdl') format('truetype'),
-                      url('css/fonts/finish/icomoon.woff?7astdl') format('woff'),
-                      url('css/fonts/finish/icomoon.svg?7astdl#icomoon') format('svg');
-                font-weight: normal;
-                font-style: normal;
-            }
-
-            [class^="icon-"], [class*=" icon-"] {
-                font-family: 'icomoon' !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
-            }
-
-            .icon-floppy-disk:before {
-                content: "\e962";
-            }
-            .icon-bin:before {
-                content: "\e9ac";
-            }
-            .icon-arrow-left:before {
-                content: "\ea38";
-            }
-            
-            /* Global Styles */
-            html * {
-                font-family:  Tahoma, Geneva, sans-serif;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }            
-            
-            .nav {
-                margin-bottom: 2em;
-            }
-            
-            .navul {
-                margin: 0;
-                padding: 0;
-                list-style-type: none;
-                overflow: hidden;
-                background-color: rgba(23, 207, 69, 0.85);
-            }
-
-            .navli {
-                width: 20%;
-                float: left;
-            }
-
-            .navli a {
-                display: block;
-                color: white;
-                padding: 0;
-                padding-top: .5em;
-                padding-bottom: .5em;
-                font-size: 1.5em;
-                text-align: center;
-                text-decoration: none;
-            }
-            
-            #title {
-                width: 79%;
-                border-left: 1px solid white;
-            }
-            
-            .btns ul {
-                max-width: 1240px;
-                margin: 0;
-                padding: 0;
-                list-style-type: none;
-                list-style: none;
-                font-size: 1.5em;
-                font-weight: 300;
-            }
-
-            .btns li {
-                margin-top: 0.2em;
-            }
-
-            .btns li span {
-                display: inline-block;
-                height: 90%;
-            }
-
-            .btns a {
-                display: block;
-                color: rgba(249, 249, 249, 0.9);
-                text-decoration: none;
-                padding: 0.5em;
-            }
-
-            #round_info {
-                background: rgba(25, 230, 77, 0.85);
-            }
-
-            #save_round {
-                background: rgba(23, 207, 69, 0.85);
-            }
-
-            #discard {
-                background: rgba(18, 161, 54, 0.85);
-            }
-
-            .icon {
-                width: 25%;
-            }
-
-            .icon + span {
-                font-size: 1.1em;
-            }
-
-            .btns i {
-                position: relative;
-                display: inline-block;
-                margin: 0 auto;
-                padding: 0.4em;
-                border-radius: 50%;
-                font-size: 1.2em;
-                box-shadow: 0 0 0 0.8em transparent;
-                background: rgba(255, 255, 255, 0.1);
-            }
-            
-            th, td  {
-                font-size: 1em;
-                border: 1px solid white;
-            }
-            th {
-                padding-left: 0.5em; 
-            }
-            td {
-                width: 20%;
-                text-align: center;
-            }
-        </style>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
+		<link rel="stylesheet" href="css/finish.css"/>
+		<title>Golf App: Finish</title>
     </head>
     <body background="img/background.jpg">
         <nav class="nav">
@@ -185,6 +42,14 @@
                                 <td id="row_putts"></td> 
                             </tr>
                         </table>
+                    </a>
+                </li>
+				<div id="private_check">
+					<input id="private_checkbox" type="checkbox"><span>Make Private</span>
+				</div>
+				<li class="btnsli" id="social" style="display: none;">
+                    <a id="social_btn" href="social.html">
+                        <span class="icon"><i aria-hidden="true" class="icon-users"></i></span><span>Social</span>
                     </a>
                 </li>
                 <li class="btnsli" id="save_round">
@@ -223,7 +88,7 @@
 			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_course_data.php", { CID: CID },
 			function(result) {
 				var row = JSON.parse(result);
-            	document.getElementById('course_name').innerHTML = row['Course_Name'];
+            	document.getElementById('course_name').innerHTML = row['CourseName'];
 			});
         };
           
@@ -279,23 +144,37 @@
             var num_holes = 18;
             if(TYP) num_holes = 9;
 			if(localStorage.getItem("RID") === null) {
-				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/push_round_data.php", {
-					Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes)
-				}, function() {
-					window.location = "index.html";
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/push_round_data.php",
+				{ Email: localStorage.getItem('userID'), CID: CID, Data: get_round_data(num_holes), Private: is_Private }, 
+				function() {
+					on_save_return(true);
 				});  
 			} else {
-				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/update_round.php", {
-					Email: localStorage.getItem('userID'), RID: localStorage.getItem("RID"), Data: get_round_data(num_holes)
-				}, function() {
-					window.location = "index.html";
+				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/update_round.php",
+				{ Email: localStorage.getItem('userID'), RID: localStorage.getItem("RID"), Data: get_round_data(num_holes), Private: is_Private }, 
+				function() {
+					on_save_return(true);
 				});
 			}
         };
+		
+		function is_Private () {
+			return document.getElementById("private_checkbox").checked;
+		};
+		
+		function on_save_return (success) {
+			if(success) {
+				localStorage.removeItem("Saved");
+				window.location = "index.html";
+			} else {
+				alert("Error: Round could not be saved.");
+			}
+		};
         
         document.getElementById('discard_btn').onclick = function () {
             var confirmed = confirm("Are you sure you don't want to save your round/changes?");
             if(confirmed) {
+				localStorage.removeItem("Saved");
                 window.location = "index.html";
             }
         };
@@ -305,6 +184,18 @@
         }, false);
         
         $(document).ready(function() {
+			if(JSON.parse(localStorage.getItem('Owner') == "false")) {
+				document.getElementById('social').style.display = "block";	
+				document.getElementById('save_round').style.display = "none";	
+				document.getElementById('discard').style.display = "none";	
+				document.getElementById('private_check').style.display = "none";
+			} 
+			if(localStorage.getItem("RID") === null) {
+				localStorage.setItem("Saved", window.location.href);
+			}
+			if(JSON.parse(localStorage.getItem('Private') == "true")) {
+				document.getElementById("private_checkbox").checked = true;
+			}
 			add_course_name();
             fill_table();
         });

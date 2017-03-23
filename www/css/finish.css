@@ -1,0 +1,160 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/finish/icomoon.eot?bofi82');
+  src:  url('fonts/finish/icomoon.eot?bofi82#iefix') format('embedded-opentype'),
+    	url('fonts/finish/icomoon.ttf?bofi82') format('truetype'),
+    	url('fonts/finish/icomoon.woff?bofi82') format('woff'),
+    	url('fonts/finish/icomoon.svg?bofi82#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+
+.icon-floppy-disk:before {
+  content: "\e962";
+}
+.icon-users:before {
+  content: "\e972";
+}
+.icon-bin:before {
+  content: "\e9ac";
+}
+.icon-arrow-left:before {
+  content: "\ea38";
+}
+
+/* Global Styles */
+html * {
+	font-family:  Tahoma, Geneva, sans-serif;
+	background-repeat: no-repeat;
+	background-size: cover;
+}            
+
+.nav {
+	margin-bottom: 2em;
+}
+
+.navul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	overflow: hidden;
+	background-color: rgba(23, 207, 69, 0.85);
+}
+
+.navli {
+	width: 20%;
+	float: left;
+}
+
+.navli a {
+	display: block;
+	color: white;
+	padding: 0;
+	padding-top: .5em;
+	padding-bottom: .5em;
+	font-size: 1.5em;
+	text-align: center;
+	text-decoration: none;
+}
+
+#title {
+	width: 79%;
+	border-left: 1px solid white;
+}
+
+.btns ul {
+	max-width: 1240px;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	list-style: none;
+	font-size: 1.5em;
+	font-weight: 300;
+}
+
+.btns li {
+	margin-top: 0.2em;
+}
+
+.btns li span {
+	display: inline-block;
+	height: 90%;
+}
+
+.btns a {
+	display: block;
+	color: rgba(249, 249, 249, 0.9);
+	text-decoration: none;
+	padding: 0.5em;
+}
+
+#round_info {
+	background: rgba(25, 230, 77, 0.85);
+}
+
+#social {
+	background: rgba(23, 207, 69, 0.85);
+}
+
+#save_round {
+	background: rgba(23, 207, 69, 0.85);
+}
+
+#discard {
+	background: rgba(18, 161, 54, 0.85);
+}
+
+.icon {
+	width: 25%;
+}
+
+.icon + span {
+	font-size: 1.1em;
+}
+
+.btns i {
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+	padding: 0.4em;
+	border-radius: 50%;
+	font-size: 1.2em;
+	box-shadow: 0 0 0 0.8em transparent;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+th, td  {
+	font-size: 1em;
+	border: 1px solid white;
+}
+th {
+	padding-left: 0.5em; 
+}
+td {
+	width: 20%;
+	text-align: center;
+}
+
+#private_check {
+	background: rgba(25, 230, 77, 0.85);
+	margin-top: 0.2em;
+	padding: 0.5em;
+	padding-left: 1em;
+	color: white;
+}
+
+input[type=checkbox] {
+	transform: scale(2);
+	margin-left: 0.5em;
+	margin-right: 3.5em;
+}

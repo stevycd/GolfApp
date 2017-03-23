@@ -120,7 +120,7 @@ h1 {
     background: rgba(23, 207, 69, 0.85);
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=email], input[type=password] {
     width: 100%;
     margin-top: 0.2em;
     margin-bottom: 0.2em;

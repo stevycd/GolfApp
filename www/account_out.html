@@ -5,13 +5,9 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
         <link rel="stylesheet" href="css/account_out.css"/> 
-        <title>Golf Caddie</title>
+        <title>Golf App: Account</title>
     </head>
     <body background="img/background.jpg">
         <h1 align="center">Account</h1>
@@ -24,8 +20,8 @@
                 </li>
                 <form id="reg_form" class="reg_form" name="reg_form" method="POST">
                     Full Name               <br><input type="text" name="full_name" id="reg_full_name" size="40" required>
-                    Email Address           <br><input type="text" name="email" id="reg_email" size="40" required>
-                    Confirm Email Address   <br><input type="text" name="conf_email" id = "reg_conf_email" size="40" required> 
+                    Email Address           <br><input type="email" name="email" id="reg_email" size="40" required>
+                    Confirm Email Address   <br><input type="email" name="conf_email" id="reg_conf_email" size="40" required> 
                     Password                <br><input type="password" name="pass" id="reg_pass" size="40" required>
                     Confirm Password        <br><input type="password" name="conf_pass" id="reg_conf_pass" size="40" required>
                     <p id="reg_msg" class="reg_msg" style="display: none"></p>
@@ -74,7 +70,7 @@
         };
         
         document.getElementById('sign_up_btn').onclick = function () {
-        	if(valid) {
+        	if(valid()) {
 				$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/register.php", { fullname: $('#reg_full_name').val(), email: $('#reg_email').val(), password: document.getElementById('reg_pass').value },
 				function(result) {
 					if(result == "success") {
@@ -87,7 +83,8 @@
 						document.getElementById('reg_email').value = "";
 						document.getElementById('reg_conf_email').value = ""; 
 					} else if (result == "error") {
-						alert("Error: " + result);
+						reg_msg.style.display = "block";
+						reg_msg.innerHTML = "An account already exists with that Email."; 
 					} else {
 						alert(result);
 					}
@@ -100,20 +97,19 @@
                 conf_email = $('#reg_conf_email').val(),
                 password = document.getElementById('reg_pass').value,
                 conf_password = document.getElementById('reg_conf_pass').value;
-              
             reg_msg.style.display = "block";
             if(fullname === "" || email === "" || conf_email === "" || password === "" || conf_password === ""){
-                reg_msg.innerHTML = "All fields must be completed.";
-                return false;
+                reg_msg.innerHTML = "All fields must be completed."; 
+                return false; 
             }
             if(email !== conf_email) {
                 reg_msg.innerHTML = "Emails entered do not match.";
                 return false;
             }
-            if(!email.includes("@")){
-                reg_msg.innerHTML = "Email entered is the wrong format.";
-                return false;
-            }
+			if(!document.getElementById('reg_email').checkValidity()){
+				reg_msg.innerHTML = "Emails entered are the wrong format.";
+				return false;
+			}
             if(password !== conf_password) {
                 reg_msg.innerHTML = "Passwords entered do not match.";
                 return false;

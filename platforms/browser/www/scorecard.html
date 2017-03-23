@@ -1,58 +1,16 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
-        <style>
-            /* Global Styles */
-            html * {
-                font-family:  Tahoma, Geneva, sans-serif;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }  
-            table, th, td {
-				background: white;
-				border: 1px solid black;
-				border-collapse: collapse;
-				width: 100%;
-				font-size: 1em;
-                margin-bottom: 0.5em;
-            }
-            th, td {
-				text-align: center;
-				width: 7%;
-            }
-            .title {
-                background: #17cf45;
-                color: white;
-            }
-            .scr {
-                color: white;
-            }
-            .total {
-                background: #e6e6e6;
-            }
-            p {
-				background: rgba(23, 207, 69, 0.85);
-                color: rgba(249, 249, 249, 0.9);
-				width: 100%;
-				padding-bottom: .1em;
-				margin-top: 0;
-				margin-bottom: 1em;
-				font-size: 2em;
-				text-align: center;
-            }
-        </style>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
+		<link rel="stylesheet" href="css/scorecard.css"/> 
+		<title>Golf App: Scorecard</title>
     </head>
     <body background="img/background.jpg">
-	<p id="course_name"></p>
+		<p id="course_name"></p>
         <table id="scorecard_out">
             <thead>
                 <tr>
@@ -95,6 +53,32 @@
                     <td id="putt8"></td>
                     <td id="putt9"></td>
                     <td id="total_putts_out" class="total"></td>
+                </tr>
+				<tr id="row_fairway">
+                    <th class="title">Fairway</th>
+                    <td><i id="fairway1" aria-hidden="true"></i></td>
+                    <td><i id="fairway2" aria-hidden="true"></i></td>
+                    <td><i id="fairway3" aria-hidden="true"></i></td>
+					<td><i id="fairway4" aria-hidden="true"></i></td>
+					<td><i id="fairway5" aria-hidden="true"></i></td>
+					<td><i id="fairway6" aria-hidden="true"></i></td>
+					<td><i id="fairway7" aria-hidden="true"></i></td>
+					<td><i id="fairway8" aria-hidden="true"></i></td>
+					<td><i id="fairway9" aria-hidden="true"></i></td>
+                    <td id="total_fairway_out" class="total"></td>
+                </tr>
+				<tr id="row_penalty">
+                    <th class="title">Penalty</th>
+                    <td id="penalty1"></td>
+                    <td id="penalty2"></td>
+                    <td id="penalty3"></td>
+                    <td id="penalty4"></td>
+                    <td id="penalty5"></td>
+                    <td id="penalty6"></td>
+                    <td id="penalty7"></td>
+                    <td id="penalty8"></td>
+                    <td id="penalty9"></td>
+                    <td id="total_penalty_out" class="total"></td>
                 </tr>
             </tbody>
         </table>
@@ -141,6 +125,32 @@
                     <td id="putt18"></td>
                     <td id="total_putts_in" class="total"></td>
                 </tr>
+				<tr id="row_fairway">
+                    <th class="title">Fairway</th>
+                    <td><i id="fairway10" aria-hidden="true"></i></td>
+                    <td><i id="fairway11" aria-hidden="true"></i></td>
+                    <td><i id="fairway12" aria-hidden="true"></i></td>
+					<td><i id="fairway13" aria-hidden="true"></i></td>
+					<td><i id="fairway14" aria-hidden="true"></i></td>
+					<td><i id="fairway15" aria-hidden="true"></i></td>
+					<td><i id="fairway16" aria-hidden="true"></i></td>
+					<td><i id="fairway17" aria-hidden="true"></i></td>
+					<td><i id="fairway18" aria-hidden="true"></i></td>
+                    <td id="total_fairway_in" class="total"></td>
+                </tr>
+				<tr id="row_penalty">
+                    <th class="title">Penalty</th>
+                    <td id="penalty10"></td>
+                    <td id="penalty11"></td>
+                    <td id="penalty12"></td>
+                    <td id="penalty13"></td>
+                    <td id="penalty14"></td>
+                    <td id="penalty15"></td>
+                    <td id="penalty16"></td>
+                    <td id="penalty17"></td>
+                    <td id="penalty18"></td>
+                    <td id="total_penalty_in" class="total"></td>
+                </tr>
             </tbody>
         </table>
     </body>
@@ -173,7 +183,7 @@
 			$.post("https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/get_course_data.php", { CID: CID },
 			function(result) {
 				var row = JSON.parse(result);
-            	document.getElementById('course_name').innerHTML = row['Course_Name'];
+            	document.getElementById('course_name').innerHTML = row['CourseName'];
 			});
         };
         
@@ -211,31 +221,76 @@
             var total_scr_out = 0,
                 total_scr_in = 0,
                 total_putt_out = 0,
-                total_putt_in = 0;
+                total_putt_in = 0,
+				total_fairway_out = [],
+                total_fairway_in = [],
+				total_penalty_out = 0,
+                total_penalty_in = 0;
             for(i = 1; i <= 18; i++) {
                 var scr = JSON.parse(localStorage.getItem("Scr"+i));
                 if(scr !== null) {
-                    var cell = document.getElementById('scr'+i);
-                    var score = parseInt(scr.Score);
+                    var cell = document.getElementById('scr'+i),
+                    	score = parseInt(scr.Score);
                     cell.innerHTML = ""+scr.Score;
                     cell.style.background = get_score_color(score, i-1);
 					if(score === 0) cell.style.color = "black";
                     document.getElementById('putt'+i).innerHTML = ""+scr.Putts;
+					document.getElementById('penalty'+i).innerHTML = ""+scr.Penalty;
+					
+					var fairway = scr.Fairway,
+						icon_class = "icon-radio-checked",
+						fairway_hit = false;
+					if(scr.Fairway == "centre") {
+						fairway_hit = true;
+					}
+					if(scr.Fairway == "forward") {
+						icon_class = "icon-arrow-up2";
+					}
+					else if(scr.Fairway == "left") {
+						icon_class = "icon-arrow-up-left2";
+					}
+					else if(scr.Fairway == "right") {
+						icon_class = "icon-arrow-up-right2";
+					}
+					else if(scr.Fairway == "back") {
+						icon_class = "icon-arrow-down2";
+					}
+					document.getElementById('fairway'+i).className = icon_class;
                     
                     if(i <= 9) {
                         total_scr_out += parseInt(scr.Score);
                         total_putt_out += parseInt(scr.Putts);
+						total_fairway_out.push(fairway_hit);
+						total_penalty_out += parseInt(scr.Penalty);
                     } else {
                         total_scr_in += parseInt(scr.Score);
                         total_putt_in += parseInt(scr.Putts);
+						total_fairway_in.push(fairway_hit);
+						total_penalty_in += parseInt(scr.Penalty);
                     }
                 }
             } 
             document.getElementById('total_score_out').innerHTML = total_scr_out;
             document.getElementById('total_putts_out').innerHTML = total_putt_out;
+			document.getElementById('total_fairway_out').innerHTML = get_percentage(total_fairway_out)+"%";
+			document.getElementById('total_penalty_out').innerHTML = total_penalty_out;
+
             document.getElementById('total_score_in').innerHTML = total_scr_in;
             document.getElementById('total_putts_in').innerHTML = total_putt_in;
+			document.getElementById('total_fairway_in').innerHTML = get_percentage(total_fairway_in)+"%";
+			document.getElementById('total_penalty_in').innerHTML = total_penalty_in;
         };
+		
+		var get_percentage = function (arr) {
+			if(arr.length > 0) {
+				var hit_count = 0;
+				for(i = 0; i < arr.length; i++) {
+					if(arr[i]) hit_count++;
+				}
+				return Math.round((hit_count/arr.length *100)*10)/10;
+			} 
+			return 0;
+		}
         
         var get_score_color = function (score, hid) {
             var color;
@@ -262,6 +317,9 @@
         }, false);
         
         $(document).ready(function() {
+			if(localStorage.getItem("RID") === null) {
+				localStorage.setItem("Saved", document.referrer);
+			}
 			add_course_name();
 			fill_table();
         });

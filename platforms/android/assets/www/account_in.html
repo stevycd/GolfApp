@@ -5,13 +5,9 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
         <link rel="stylesheet" href="css/account_in.css"/> 
-        <title>Golf Caddie</title>
+        <title>Golf App: Account</title>
     </head>
     <body background="img/background.jpg">
         <h1 align="center">Account</h1>
@@ -73,7 +69,7 @@
 				$.ajax({
 					type: "POST",
 					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/change_name.php",
-					data: { fullname: $('#set_full_name').val() },
+					data: { fullname: $('#set_full_name').val(), email: localStorage.getItem("userID") },
 					crossDomain: true,
 					cache: false,
 					success: function (result) {
@@ -99,7 +95,7 @@
 				$.ajax({
 					type: "POST",
 					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/change_password.php",
-					data: { old_password: old_pass.value, new_password: new_pass.value },
+					data: { old_password: old_pass.value, new_password: new_pass.value, email: localStorage.getItem("userID") },
 					crossDomain: true,
 					cache: false,
 					success: function (result) {
@@ -122,6 +118,7 @@
 				$.ajax({
 					type: "POST",
 					url: "https://devweb2015.cis.strath.ac.uk/~xqb13173/Project/php/delete_account.php",
+					data: { email: localStorage.getItem("userID") },
 					crossDomain: true,
 					cache: false,
 					success: function (result) {

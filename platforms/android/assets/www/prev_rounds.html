@@ -5,13 +5,9 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
-        <link rel="shortcut icon" href="img/favicon-16x16.png"/>
-        <link rel="apple-touch-icon" href="img/apple-icon-76x76.png"/>
+        <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
         <link rel="stylesheet" href="css/prev_rounds.css"/> 
-        <title>Golf App</title>
+        <title>Golf App: Previous Rounds</title>
     </head>
     <body background="img/background.jpg">
         <h1 align="center">Previous Rounds</h1>
@@ -22,7 +18,7 @@
                         <span class="icon"><i aria-hidden="true" class="icon-home"></i></span><span>Home</span>
                     </a>
                 </li>
-				<h2 align="left">Rounds:</h2>
+				<h2 align="left" id="rounds_title">Rounds:</h2>
 			</ul>
 		</nav>
 	</body>
@@ -38,14 +34,16 @@
 			function(result) {
 				if(result != "error") {
 					rows = JSON.parse(result);
-					for(i = 0; i < rows.length; i++) {
-						$('ul#nav').append('<li class="round" id="round'+i+'"><a id="round_info'+i+'"><span class="icon"><i aria-hidden="true" class="icon-circle-down"></i></span><span><p class="course_name">'+rows[i]['Course_Name']+'</p><p class="played">'+rows[i]['Played']+'</p></span></a></li>');
+					for(i = rows.length-1; i >= 0 ; i--) {
+						$('ul#nav').append('<li class="round" id="round'+i+'"><a id="round_info'+i+'"><span class="icon"><i aria-hidden="true" class="icon-circle-down"></i></span><span><p class="course_name">'+rows[i]['CourseName']+'</p><p class="played">'+rows[i]['Played']+'</p></span></a></li>');
 						$('#round'+i+'').append('<nav class="dropdown" id="dropdown'+i+'"><ul><li><a class="dropbtn" id="edit'+i+'" style="border-right: 2px solid rgba(255, 255, 255, 0.3);"><span class="icon"><i aria-hidden="true" class="icon-pencil2"></i></span><span>Edit</span></a></li><li><a class="dropbtn" id="discard'+i+'"><span class="icon"><i aria-hidden="true" class="icon-bin"></i></span><span>Discard</span></a></li></ul></nav>');		
 
 						set_round_event_handler(i);
-						set_edit_event_handler(i, rows[i]['Course_Name']);
+						set_edit_event_handler(i, rows[i]['CourseName']);
 						set_discard_event_handler(i);
 					}
+				} else {
+					document.getElementById('rounds_title').innerHTML = "You have no saved rounds";
 				}
 			});
 		};
@@ -60,6 +58,7 @@
 		function set_edit_event_handler (index, Course_Name) {		
 			document.getElementById('edit'+index+'').onclick = function () {	
 				localStorage.setItem("RID", rows[index]['RoundID']);
+				localStorage.setItem("Owner", "true");
 				
 				selected_course = Course_Name;
 				g_index = index;
@@ -68,13 +67,13 @@
 		};
 		
 		function get_course (tx) {
-			tx.executeSql('SELECT DISTINCT * FROM courses WHERE Course_Name = "'+ selected_course +'"', [], set_details, error_call);
+			tx.executeSql('SELECT DISTINCT * FROM courses WHERE CourseName = "'+ selected_course +'"', [], set_details, error_call);
 		};
 		
 		function set_details (tx, result) {
 			for(i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
-				CID = row['CID'];
+				CID = row['CourseID'];
 				TYP = row['TYP'];
 			}
 			fill_localStorage(g_index);
@@ -86,7 +85,8 @@
 		};
 		
 		function fill_localStorage (index) {
-			var data = JSON.parse(rows[index]['Round_Data']);
+			var data = JSON.parse(rows[index]['RoundData']);
+			localStorage.setItem("Private", rows[index]['Private'] == 1);
 			var num_holes = 18;
             if(TYP) num_holes = 9;
 			for(i = 0; i < num_holes; i++) {
