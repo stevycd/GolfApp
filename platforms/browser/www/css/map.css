@@ -1,3 +1,4 @@
+/* Icon Styles */
 @font-face {
   font-family: 'icomoon';
   src:  url('fonts/map/icomoon.eot?1bqn53');
@@ -188,13 +189,13 @@ li a {
 	display: none;
 	z-index: 2;
 	position: absolute;
-	width: 91%;
+	width: 90%;
 	margin-top: 0.5em;
 	margin-left: 0.5em;
-	padding: 0.375em;
+	padding: 0.37em;
 	color: white;
 	background-color: rgb(25, 230, 77);
-	font-size: 1em;
+	font-size: 1.25em;
 	border: 1px solid white;
 	-webkit-appearance: none;
 }

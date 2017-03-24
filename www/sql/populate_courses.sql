@@ -10,3 +10,6 @@ INSERT INTO courses (CourseID,CourseName,TYP)
 VALUES (5, "Larkhall", 1);
 INSERT INTO courses (CourseID,CourseName,TYP) 
 VALUES (6, "Strathclyde", 1);
+
+INSERT INTO courses (CourseID,CourseName,TYP) 
+VALUES (7, "Test", 0);

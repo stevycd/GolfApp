@@ -3,8 +3,8 @@
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0">
         <link rel="icon" type="image/png" sizes="96x96" href="img/logo.png">
 		<link rel="stylesheet" href="css/leaflet.css"/>
         <link rel="stylesheet" href="css/map.css"/> 
@@ -310,11 +310,15 @@
 				}
 			}  
             else {
-                var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
-                if(confirmed) {
-					localStorage.removeItem("Saved");
-                	window.location = "index.html";
-                }
+				if(JSON.parse(localStorage.getItem('Owner') == "false")) {
+					window.location = "social.html";
+				} else {
+					var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
+					if(confirmed) {
+						localStorage.removeItem("Saved");
+						window.location = "index.html";
+					}
+				}
             } 
         };
 		
@@ -396,7 +400,7 @@
 		
 		document.getElementById('home_btn').onclick = function () {
 			if(JSON.parse(localStorage.getItem('Owner') == "false")) {
-				window.location = "index.html";
+				window.location = "social.html";
 			} else {
 				var confirmed = confirm("Returning home will discard your round/changes, are you sure?");
 				if(confirmed) {

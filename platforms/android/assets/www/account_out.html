@@ -55,12 +55,14 @@
             var form = document.getElementById('reg_form');
             form.style.display = form.style.display === "block" ? "none" : "block";
         };
+		
         document.getElementById('log_btn').onclick = function () {
             document.getElementById('reg_form').style.display = "none";
             reset();
             var form = document.getElementById('log_form');
             form.style.display = form.style.display === "block" ? "none" : "block";
         };
+		
         var reset = function () {
             reg_msg.style.display = "none";
             log_msg.style.display = "none";
@@ -91,6 +93,7 @@
 				});
         	}
 		};
+		
         var valid = function () {
             var fullname = $('#reg_full_name').val(),
                 email = $('#reg_email').val(),

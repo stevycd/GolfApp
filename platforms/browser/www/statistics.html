@@ -30,7 +30,8 @@
 			}
 			td {
 				border: 2px solid rgba(0, 0, 0, 0.1);
-				padding 2em;
+				padding-left: .5em;
+				padding-right: .5em;
 			}
 			.title {
 				text-align: left;
@@ -71,16 +72,16 @@
 				<table class="scoring_list" id="scoring_list" style="display: none;">
 					<tbody>
 						<tr>
-							<th class="title">Average Score (18)</th>	
-							<td id="average_score_18"></td>
+							<th class="title">Average for 18</th>	
+							<td id="average_score_18">0</td>
 						</tr>
 						<tr>
-							<th class="title">Average Score (9)</th>	
-							<td id="average_score_9"></td>
+							<th class="title">Average for 9</th>	
+							<td id="average_score_9">0</td>
 						</tr>
 						<tr>
 							<th class="title">Greens in Regulation</th>	
-							<td id="greens_in_regulation"></td>
+							<td id="greens_in_regulation">0%</td>
 						</tr>
 					</tbody>
 				</table>
@@ -93,11 +94,11 @@
 					<tbody>
 						<tr>
 							<th class="title">Average Putts (18)</th>	
-							<td id="average_putts_18"></td>
+							<td id="average_putts_18">0</td>
 						</tr>
 						<tr>
 							<th class="title">Average Putts (9)</th>	
-							<td id="average_putts_9"></td>
+							<td id="average_putts_9">0</td>
 						</tr>
 					</tbody>
 				</table>
@@ -110,15 +111,15 @@
 					<tbody>
 						<tr>
 							<th class="title">Fairway Hit</th>	
-							<td id="fairway_hit"></td>
+							<td id="fairway_hit">0%</td>
 						</tr>
 						<tr>
 							<th class="title">Fairway Right</th>	
-							<td id="fairway_right"></td>
+							<td id="fairway_right">0%</td>
 						</tr>
 						<tr>
 							<th class="title">Fairway Left</th>	
-							<td id="fairway_left"></td>
+							<td id="fairway_left">0%</td>
 						</tr>
 					</tbody>
 				</table>
@@ -261,13 +262,13 @@
 							get_club_distances(data);
 						}
 					}
-					for(i = 0; i < Object.keys(clubs).length; i++) {
-						var key = Object.keys(clubs)[i];
-						$('#club_list tbody').append('<tr id="trtest">');
-							$('#club_list tbody').append('<th class="title">'+key.split('_').pop()+'</th>');
-							$('#club_list tbody').append('<td>'+get_average(clubs[key])+'</td>');
-						$('#club_list tbody').append('</tr>');
-					}
+				}
+				for(i = 0; i < Object.keys(clubs).length; i++) {
+					var key = Object.keys(clubs)[i];
+					$('#club_list tbody').append('<tr id="trtest">');
+						$('#club_list tbody').append('<th class="title">'+key.split('_').pop()+'</th>');
+						$('#club_list tbody').append('<td>'+get_average(clubs[key])+'</td>');
+					$('#club_list tbody').append('</tr>');
 				}
 			});
 		};

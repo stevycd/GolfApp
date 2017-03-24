@@ -108,7 +108,6 @@ h1 {
 	background: rgba(255, 255, 255, 0.1);
 }	
 
-/* Style the tab */
 div.tab {
 	margin-top: 0.5em;
 	padding: 0;
@@ -117,7 +116,6 @@ div.tab {
 	background-color: rgba(25, 230, 77, 0.85);
 }
 
-/* Style the links inside the tab */
 div.tab a {
 	float: left;
 	display: inline;
@@ -139,12 +137,10 @@ div.tab a {
 	border-right: 2px solid rgba(255, 255, 255, 0.5);
 }
 
-/* Create an active/current tablink class */
 div.tab a:focus, .active {
 	background: rgba(20, 184, 61, 0.85);
 }
 
-/* Style the tab content */
 .tabcontent {
 	display: none;
 	padding: 6px 12px;

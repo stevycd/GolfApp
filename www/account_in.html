@@ -47,6 +47,7 @@
             reset();            
             set_form.style.display = set_form.style.display === "block" ? "none" : "block";
         };
+		
         var reset = function () {
             name_err_msg.style.display = "none";
             pass_err_msg.style.display = "none";
@@ -55,10 +56,12 @@
             old_pass.value = "";
             new_pass.value = "";
         };
+		
 		document.getElementById('sign_out_btn').onclick = function () {
 			localStorage.removeItem("userID");
 			window.location = "index.html";
 		};
+		
         document.getElementById('conf_name_btn').onclick = function () {
             name_err_msg.style.display = "block";
             pass_err_msg.style.display = "none";
@@ -85,6 +88,7 @@
 				});
             }
         };
+		
         document.getElementById('conf_pass_btn').onclick = function () {
             pass_err_msg.style.display = "block";
             name_err_msg.style.display = "none";
@@ -112,6 +116,7 @@
 				});
             }
         };
+		
         document.getElementById('del_acc_btn').onclick = function () {
             var confirmed = confirm("Are you sure you want to Delete your Account?");
             if(confirmed) {
